@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#112231" />
+    <title>店面货品摆放 · 区域台账</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup" aria-label="店面货品摆放">
+          <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div>
+            <p class="brand-kicker">STORE ATLAS</p>
+            <p class="brand-name">店面货品摆放</p>
+          </div>
+        </div>
+
+        <div class="global-search" role="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.8"></circle><path d="m16.2 16.2 4.3 4.3"></path></svg>
+          <input id="globalSearch" type="search" autocomplete="off" placeholder="搜索货品编号、类型或区域…" />
+          <button id="clearSearch" class="icon-button search-clear" aria-label="清除搜索" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+          </button>
+          <div id="searchResults" class="search-results" hidden></div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="sync-status"><span class="status-dot"></span><span>本地已保存</span></div>
+          <button id="quickAdd" class="primary-button top-add">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+            <span>新增货品</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="mobile-floor-bar" id="mobileFloorBar" aria-label="楼层导航"></div>
+
+      <div class="workspace">
+        <aside class="sidebar" aria-label="楼层与区域导航">
+          <div class="sidebar-heading">
+            <div>
+              <p class="eyebrow">NAVIGATE</p>
+              <h2>摆放区域</h2>
+            </div>
+            <span id="zoneCount" class="count-badge">0 区</span>
+          </div>
+          <div id="floorNav" class="floor-nav"></div>
+          <div class="sidebar-footer">
+            <div class="legend-line"><span class="legend-swatch filled"></span><span>已有货品</span></div>
+            <div class="legend-line"><span class="legend-swatch hollow"></span><span>空置区域</span></div>
+          </div>
+        </aside>
+
+        <main class="main-content">
+          <section class="welcome-row">
+            <div>
+              <p class="eyebrow">STORE MAP <span class="eyebrow-slash">/</span> <span id="activeFloorLabel">一楼</span></p>
+              <h1>让每件货品<br /><em>都有自己的位置。</em></h1>
+              <p class="intro-copy">按楼层和区域整理陈列信息，现场查找时一眼就能定位。</p>
+            </div>
+            <div class="hero-visual" aria-label="店内区域示意图">
+              <div class="orbit orbit-one"></div>
+              <div class="orbit orbit-two"></div>
+              <div class="hero-pin pin-a">A</div>
+              <div class="hero-pin pin-c">C</div>
+              <div class="hero-pin pin-e">E</div>
+              <span class="hero-caption">现场区域<br />快速定位</span>
+            </div>
+          </section>
+
+          <section class="metrics-row" aria-label="店面统计">
+            <div class="metric-card metric-primary">
+              <span class="metric-label">当前楼层货品</span>
+              <strong id="floorProductCount">0</strong>
+              <span id="floorProductHint" class="metric-foot">件待整理</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">区域占用率</span>
+              <strong id="occupancyRate">0%</strong>
+              <span id="occupancyHint" class="metric-foot">0 / 0 个区域</span>
+            </div>
+            <div class="metric-card metric-wide">
+              <span class="metric-label">最后整理</span>
+              <strong id="lastUpdated">—</strong>
+              <span class="metric-foot">数据保存在本机浏览器</span>
+            </div>
+          </section>
+
+          <section class="area-workspace">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">CURRENT ZONE</p>
+                <h2 id="currentAreaName">A 区</h2>
+                <p id="currentAreaMeta" class="section-subtitle">一楼 · 入口陈列区</p>
+              </div>
+              <div class="section-actions">
+                <button id="exportData" class="secondary-button" title="导出全部数据">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+                  <span>导出</span>
+                </button>
+                <button id="areaAdd" class="primary-button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                  <span>添加到本区</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="zoneMap" class="zone-map" aria-label="当前楼层区域概览"></div>
+            <div id="productGrid" class="product-grid"></div>
+            <div id="emptyState" class="empty-state" hidden>
+              <div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg></div>
+              <h3>这个区域还没有货品</h3>
+              <p>把第一件货品放进这里，建立你的店面地图。</p>
+              <button id="emptyAdd" class="primary-button">添加第一件货品</button>
+            </div>
+          </section>
+        </main>
+
+        <aside class="inspector" aria-label="区域摘要">
+          <div class="inspector-header">
+            <p class="eyebrow">ZONE NOTE</p>
+            <span id="inspectorZone" class="inspector-code">A</span>
+          </div>
+          <div class="inspector-title-row">
+            <h2 id="inspectorTitle">入口陈列区</h2>
+            <span id="inspectorFloor" class="floor-chip">一楼</span>
+          </div>
+          <p id="inspectorCopy" class="inspector-copy">顾客进入店面后的第一视觉触点，适合放置当季主推或高识别度货品。</p>
+
+          <div class="inspector-divider"></div>
+          <div class="inspector-stat-row"><span>本区货品</span><strong id="inspectorProducts">0 件</strong></div>
+          <div class="inspector-stat-row"><span>图片完整度</span><strong id="inspectorImages">0%</strong></div>
+
+          <div class="inspector-divider"></div>
+          <div class="mini-map-title"><span>楼层布局</span><span id="miniMapLabel">1F</span></div>
+          <div id="miniMap" class="mini-map"></div>
+
+          <div class="inspector-tip">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.2 14.7A6 6 0 1 1 15.8 14.7c-.9.8-1.5 1.5-1.8 2.3h-4c-.3-.8-.9-1.5-1.8-2.3Z"></path></svg>
+            <p>小提示：上传实拍图后，现场同事能更快确认货品与位置。</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <dialog id="productDialog" class="product-dialog">
+      <form id="productForm" method="dialog" class="dialog-card">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow" id="dialogEyebrow">ADD PRODUCT</p>
+            <h2 id="dialogTitle">添加货品</h2>
+          </div>
+          <button type="button" id="closeDialog" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+        </div>
+        <div class="dialog-body">
+          <div class="image-upload-row">
+            <div class="image-preview" id="imagePreview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Z"></path><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m4 17 4.5-4.5 3 3 2-2L20 19"></path></svg><span>暂无图片</span></div>
+            <div class="image-upload-copy">
+              <strong>货品图片</strong>
+              <p>建议上传清晰的正面或货架实拍图</p>
+              <div class="upload-actions"><label for="productImage" class="upload-button">选择图片</label><button id="removeImage" type="button" class="text-button" hidden>移除图片</button></div>
+              <input id="productImage" type="file" accept="image/*" hidden />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <label class="field full-field"><span>货品编号 <i>*</i></span><input id="productNumber" name="number" required maxlength="40" placeholder="例如：SKU-2408-01" /></label>
+            <label class="field"><span>货品类型 <i>*</i></span><input id="productType" name="type" required maxlength="30" placeholder="例如：护肤品" /></label>
+            <label class="field"><span>所在楼层 <i>*</i></span><select id="productFloor" name="floor" required></select></label>
+            <label class="field"><span>所在区域 <i>*</i></span><select id="productZone" name="zone" required></select></label>
+            <label class="field full-field"><span>细节说明</span><textarea id="productDetails" name="details" rows="4" maxlength="240" placeholder="记录颜色、规格、陈列要求或补货备注…"></textarea><small><span id="detailCount">0</span>/240</small></label>
+          </div>
+        </div>
+        <div class="dialog-footer"><button type="button" id="cancelDialog" class="secondary-button">取消</button><button type="submit" class="primary-button"><span id="saveProductText">保存货品</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
