@@ -18,7 +18,7 @@ const TRANSLATIONS = {
   zh: {
     title: '店面货品摆放 · 区域台账', brand: '店面货品摆放', navigate: 'NAVIGATE', areas: '摆放区域', storeMap: 'STORE MAP',
     intro: '按楼层和区域整理陈列信息，现场查找时一眼就能定位。', heroMapLine1: '现场区域', heroMapLine2: '快速定位',
-    floorProducts: '当前楼层货品', occupancy: '区域占用率', lastUpdatedLabel: '最后整理', localStorageHint: '数据保存在本机浏览器',
+    floorProducts: '当前楼层货品', occupancy: '区域占用率', lastUpdatedLabel: '最后整理', localStorageHint: '数据保存在本机浏览器', refreshData: '刷新云端数据', refreshingData: '正在刷新云端数据…', refreshed: '云端数据已刷新', refreshFailed: '刷新失败，请检查云端连接',
     currentZone: 'CURRENT ZONE', export: '导出', addToZone: '添加到本区', emptyTitle: '这个区域还没有货品', emptyCopy: '把第一件货品放进这里，建立你的店面地图。', emptyAdd: '添加第一件货品',
     zoneNote: 'ZONE NOTE', floorLayout: '楼层布局', tip: '小提示：上传实拍图后，现场同事能更快确认货品与位置。', productImage: '货品图片', imageHint: '建议上传清晰的正面或货架实拍图', chooseImage: '选择图片', removeImage: '移除图片',
     productNumber: '货品编号 <i>*</i>', productType: '货品类型 <i>*</i>', productFloor: '所在楼层 <i>*</i>', productZone: '所在区域 <i>*</i>', details: '细节说明', cancel: '取消',
@@ -34,7 +34,7 @@ const TRANSLATIONS = {
   kk: {
     title: 'Дүкен тауарлары · Аймақтар тізімі', brand: 'Дүкен тауарлары', navigate: 'БАҒЫТ', areas: 'Орналастыру аймақтары', storeMap: 'ДҮКЕН КАРТАСЫ',
     intro: 'Тауарларды қабаттар мен аймақтар бойынша реттеңіз — қажетті орынды бірден табыңыз.', heroMapLine1: 'Дүкен аймағы', heroMapLine2: 'Жылдам табу',
-    floorProducts: 'Осы қабаттағы тауар', occupancy: 'Аймақ толуы', lastUpdatedLabel: 'Соңғы реттелуі', localStorageHint: 'Деректер осы браузерде сақталады',
+    floorProducts: 'Осы қабаттағы тауар', occupancy: 'Аймақ толуы', lastUpdatedLabel: 'Соңғы реттелуі', localStorageHint: 'Деректер осы браузерде сақталады', refreshData: 'Бұлттағы деректерді жаңарту', refreshingData: 'Бұлттағы деректер жаңартылуда…', refreshed: 'Бұлттағы деректер жаңартылды', refreshFailed: 'Жаңарту сәтсіз, бұлт байланысын тексеріңіз',
     currentZone: 'ҚАЗІРГІ АЙМАҚ', export: 'Экспорт', addToZone: 'Осы аймаққа қосу', emptyTitle: 'Бұл аймақта тауар жоқ', emptyCopy: 'Дүкен картаңызды құру үшін алғашқы тауарды қосыңыз.', emptyAdd: 'Алғашқы тауарды қосу',
     zoneNote: 'АЙМАҚ ЕСКЕРТПЕСІ', floorLayout: 'Қабат жоспары', tip: 'Кеңес: нақты сурет қосылса, қызметкерлер тауар орнын тезірек табады.', productImage: 'Тауар суреті', imageHint: 'Алдыңғы немесе сөре суретін анық етіп жүктеңіз', chooseImage: 'Сурет таңдау', removeImage: 'Суретті өшіру',
     productNumber: 'Тауар нөмірі <i>*</i>', productType: 'Тауар түрі <i>*</i>', productFloor: 'Қабат <i>*</i>', productZone: 'Аймақ <i>*</i>', details: 'Толық сипаттама', cancel: 'Бас тарту',
@@ -50,7 +50,7 @@ const TRANSLATIONS = {
   ru: {
     title: 'Раскладка магазина · Карта зон', brand: 'Раскладка магазина', navigate: 'НАВИГАЦИЯ', areas: 'Зоны размещения', storeMap: 'КАРТА МАГАЗИНА',
     intro: 'Организуйте выкладку по этажам и зонам, чтобы сразу находить нужное место.', heroMapLine1: 'Зона магазина', heroMapLine2: 'Быстрый поиск',
-    floorProducts: 'Товары на этаже', occupancy: 'Загрузка зон', lastUpdatedLabel: 'Последняя сортировка', localStorageHint: 'Данные сохранены в этом браузере',
+    floorProducts: 'Товары на этаже', occupancy: 'Загрузка зон', lastUpdatedLabel: 'Последняя сортировка', localStorageHint: 'Данные сохранены в этом браузере', refreshData: 'Обновить облачные данные', refreshingData: 'Обновление облачных данных…', refreshed: 'Облачные данные обновлены', refreshFailed: 'Не удалось обновить, проверьте облачное соединение',
     currentZone: 'ТЕКУЩАЯ ЗОНА', export: 'Экспорт', addToZone: 'Добавить в зону', emptyTitle: 'В этой зоне пока нет товаров', emptyCopy: 'Добавьте первый товар и создайте карту магазина.', emptyAdd: 'Добавить первый товар',
     zoneNote: 'ЗАМЕТКА ЗОНЫ', floorLayout: 'План этажа', tip: 'Совет: реальное фото поможет сотрудникам быстрее найти товар и его место.', productImage: 'Фото товара', imageHint: 'Загрузите чёткое фото товара или полки', chooseImage: 'Выбрать фото', removeImage: 'Удалить фото',
     productNumber: 'Артикул <i>*</i>', productType: 'Тип товара <i>*</i>', productFloor: 'Этаж <i>*</i>', productZone: 'Зона <i>*</i>', details: 'Описание', cancel: 'Отмена',
@@ -95,6 +95,8 @@ function applyLanguage() {
   $('#quickAdd span').textContent = t('addProduct');
   $('.sync-status span:last-child').textContent = state.remoteEnabled ? t('cloudSynced') : t('localMode');
   $('#storageHint').textContent = state.remoteEnabled ? t('cloudSynced') : t('localStorageHint');
+  $('#refreshData')?.setAttribute('aria-label', t('refreshData'));
+  $('#refreshData')?.setAttribute('title', t('refreshData'));
   $('#languageSelect').value = state.language;
   $('#dialogTitle').textContent = state.editingId ? t('editProduct') : t('addProduct');
   $('#saveProductText').textContent = state.editingId ? t('saveChanges') : t('saveProduct');
@@ -178,30 +180,61 @@ function toRemoteProduct(product) {
   };
 }
 
-async function initRemote() {
+async function refreshRemoteData({ notify = false } = {}) {
   if (!remoteConfigured()) {
+    state.remoteEnabled = false;
     setSyncStatus(t('localMode'));
-    return;
+    if (notify) showToast(t('refreshFailed'));
+    return false;
   }
-  remoteClient = window.supabase.createClient(STORE_ATLAS_CONFIG.url, STORE_ATLAS_CONFIG.anonKey);
+  if (!remoteClient) remoteClient = window.supabase.createClient(STORE_ATLAS_CONFIG.url, STORE_ATLAS_CONFIG.anonKey);
   state.remoteEnabled = true;
   setSyncStatus(t('connecting'), 'busy');
   const { data, error } = await remoteClient.from('products').select('*').order('updated_at', { ascending: false });
   if (error) {
     console.error('Supabase load failed', error);
     setSyncStatus(t('connectionFail'), 'error');
-    showToast(`${t('connectionFail')}，${t('localMode')}`);
-    return;
+    if (notify) showToast(t('refreshFailed'));
+    return false;
   }
   if (data.length) {
     state.products = data.map(fromRemoteProduct);
   } else {
     const { error: seedError } = await remoteClient.from('products').upsert(seedProducts.map(toRemoteProduct));
-    if (!seedError) state.products = seedProducts;
+    if (seedError) {
+      console.error('Supabase seed failed', seedError);
+      setSyncStatus(t('connectionFail'), 'error');
+      if (notify) showToast(t('refreshFailed'));
+      return false;
+    }
+    state.products = seedProducts;
   }
   saveProducts();
   setSyncStatus(t('cloudSynced'));
   renderAll();
+  if (notify) showToast(t('refreshed'));
+  return true;
+}
+
+async function initRemote() {
+  await refreshRemoteData();
+}
+
+async function handleRefresh() {
+  const button = $('#refreshData');
+  if (!button || button.disabled) return;
+  button.disabled = true;
+  button.classList.add('is-refreshing');
+  button.setAttribute('aria-label', t('refreshingData'));
+  button.setAttribute('title', t('refreshingData'));
+  try {
+    await refreshRemoteData({ notify: true });
+  } finally {
+    button.disabled = false;
+    button.classList.remove('is-refreshing');
+    button.setAttribute('aria-label', t('refreshData'));
+    button.setAttribute('title', t('refreshData'));
+  }
 }
 
 async function uploadRemoteImage(product) {
@@ -454,6 +487,7 @@ $('#quickAdd').addEventListener('click', openAdd);
 $('#areaAdd').addEventListener('click', openAdd);
 $('#emptyAdd').addEventListener('click', openAdd);
 $('#exportData').addEventListener('click', exportData);
+$('#refreshData').addEventListener('click', handleRefresh);
 $('#closeDialog').addEventListener('click', () => $('#productDialog').close());
 $('#cancelDialog').addEventListener('click', () => $('#productDialog').close());
 $('#productDialog').addEventListener('click', (event) => { if (event.target === $('#productDialog')) $('#productDialog').close(); });

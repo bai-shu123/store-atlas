@@ -37,6 +37,9 @@
             </select>
           </label>
           <div class="sync-status"><span class="status-dot"></span><span>本地已保存</span></div>
+          <button id="refreshData" class="icon-button refresh-button" type="button" aria-label="刷新云端数据" title="刷新云端数据">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.8-4L4 9"></path><path d="M4 5v4h4"></path><path d="M4 13a8 8 0 0 0 14.8 4L20 15"></path><path d="M20 19v-4h-4"></path></svg>
+          </button>
           <button id="quickAdd" class="primary-button top-add">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
             <span>新增货品</span>
@@ -189,6 +192,6 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="supabase-browser.js?v=20261008"></script>
     <script src="supabase-config.js?v=20261008"></script>
-    <script src="app.js?v=e74e79b"></script>
+    <script src="app.js?v=refresh-20261008"></script>
   </body>
 </html>
