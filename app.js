@@ -94,6 +94,7 @@ function applyLanguage() {
   $('#globalSearch').placeholder = t('searchPlaceholder');
   $('#quickAdd span').textContent = t('addProduct');
   $('.sync-status span:last-child').textContent = state.remoteEnabled ? t('cloudSynced') : t('localMode');
+  $('#storageHint').textContent = state.remoteEnabled ? t('cloudSynced') : t('localStorageHint');
   $('#languageSelect').value = state.language;
   $('#dialogTitle').textContent = state.editingId ? t('editProduct') : t('addProduct');
   $('#saveProductText').textContent = state.editingId ? t('saveChanges') : t('saveProduct');
