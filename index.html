@@ -28,6 +28,14 @@
         </div>
 
         <div class="topbar-actions">
+          <label class="language-picker" aria-label="选择语言">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg>
+            <select id="languageSelect">
+              <option value="zh">中文</option>
+              <option value="kk">Қазақша</option>
+              <option value="ru">Русский</option>
+            </select>
+          </label>
           <div class="sync-status"><span class="status-dot"></span><span>本地已保存</span></div>
           <button id="quickAdd" class="primary-button top-add">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
@@ -42,8 +50,8 @@
         <aside class="sidebar" aria-label="楼层与区域导航">
           <div class="sidebar-heading">
             <div>
-              <p class="eyebrow">NAVIGATE</p>
-              <h2>摆放区域</h2>
+              <p class="eyebrow" data-i18n="navigate">NAVIGATE</p>
+              <h2 data-i18n="areas">摆放区域</h2>
             </div>
             <span id="zoneCount" class="count-badge">0 区</span>
           </div>
@@ -57,9 +65,9 @@
         <main class="main-content">
           <section class="welcome-row">
             <div>
-              <p class="eyebrow">STORE MAP <span class="eyebrow-slash">/</span> <span id="activeFloorLabel">一楼</span></p>
+            <p class="eyebrow"><span data-i18n="storeMap">STORE MAP</span> <span class="eyebrow-slash">/</span> <span id="activeFloorLabel">一楼</span></p>
               <h1>让每件货品<br /><em>都有自己的位置。</em></h1>
-              <p class="intro-copy">按楼层和区域整理陈列信息，现场查找时一眼就能定位。</p>
+              <p class="intro-copy" data-i18n="intro">按楼层和区域整理陈列信息，现场查找时一眼就能定位。</p>
             </div>
             <div class="hero-visual" aria-label="店内区域示意图">
               <div class="orbit orbit-one"></div>
@@ -67,43 +75,43 @@
               <div class="hero-pin pin-a">A</div>
               <div class="hero-pin pin-c">C</div>
               <div class="hero-pin pin-e">E</div>
-              <span class="hero-caption">现场区域<br />快速定位</span>
+              <span class="hero-caption"><span data-i18n="heroMapLine1">现场区域</span><br /><span data-i18n="heroMapLine2">快速定位</span></span>
             </div>
           </section>
 
           <section class="metrics-row" aria-label="店面统计">
             <div class="metric-card metric-primary">
-              <span class="metric-label">当前楼层货品</span>
+              <span class="metric-label" data-i18n="floorProducts">当前楼层货品</span>
               <strong id="floorProductCount">0</strong>
               <span id="floorProductHint" class="metric-foot">件待整理</span>
             </div>
             <div class="metric-card">
-              <span class="metric-label">区域占用率</span>
+              <span class="metric-label" data-i18n="occupancy">区域占用率</span>
               <strong id="occupancyRate">0%</strong>
               <span id="occupancyHint" class="metric-foot">0 / 0 个区域</span>
             </div>
             <div class="metric-card metric-wide">
-              <span class="metric-label">最后整理</span>
+              <span class="metric-label" data-i18n="lastUpdatedLabel">最后整理</span>
               <strong id="lastUpdated">—</strong>
-              <span class="metric-foot">数据保存在本机浏览器</span>
+              <span class="metric-foot" data-i18n="localStorageHint">数据保存在本机浏览器</span>
             </div>
           </section>
 
           <section class="area-workspace">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">CURRENT ZONE</p>
+                <p class="eyebrow" data-i18n="currentZone">CURRENT ZONE</p>
                 <h2 id="currentAreaName">A 区</h2>
                 <p id="currentAreaMeta" class="section-subtitle">一楼 · 入口陈列区</p>
               </div>
               <div class="section-actions">
                 <button id="exportData" class="secondary-button" title="导出全部数据">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
-                  <span>导出</span>
+                  <span data-i18n="export">导出</span>
                 </button>
                 <button id="areaAdd" class="primary-button">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
-                  <span>添加到本区</span>
+                  <span data-i18n="addToZone">添加到本区</span>
                 </button>
               </div>
             </div>
@@ -112,16 +120,16 @@
             <div id="productGrid" class="product-grid"></div>
             <div id="emptyState" class="empty-state" hidden>
               <div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg></div>
-              <h3>这个区域还没有货品</h3>
-              <p>把第一件货品放进这里，建立你的店面地图。</p>
-              <button id="emptyAdd" class="primary-button">添加第一件货品</button>
+              <h3 data-i18n="emptyTitle">这个区域还没有货品</h3>
+              <p data-i18n="emptyCopy">把第一件货品放进这里，建立你的店面地图。</p>
+              <button id="emptyAdd" class="primary-button" data-i18n="emptyAdd">添加第一件货品</button>
             </div>
           </section>
         </main>
 
         <aside class="inspector" aria-label="区域摘要">
           <div class="inspector-header">
-            <p class="eyebrow">ZONE NOTE</p>
+            <p class="eyebrow" data-i18n="zoneNote">ZONE NOTE</p>
             <span id="inspectorZone" class="inspector-code">A</span>
           </div>
           <div class="inspector-title-row">
@@ -135,12 +143,12 @@
           <div class="inspector-stat-row"><span>图片完整度</span><strong id="inspectorImages">0%</strong></div>
 
           <div class="inspector-divider"></div>
-          <div class="mini-map-title"><span>楼层布局</span><span id="miniMapLabel">1F</span></div>
+          <div class="mini-map-title"><span data-i18n="floorLayout">楼层布局</span><span id="miniMapLabel">1F</span></div>
           <div id="miniMap" class="mini-map"></div>
 
           <div class="inspector-tip">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.2 14.7A6 6 0 1 1 15.8 14.7c-.9.8-1.5 1.5-1.8 2.3h-4c-.3-.8-.9-1.5-1.8-2.3Z"></path></svg>
-            <p>小提示：上传实拍图后，现场同事能更快确认货品与位置。</p>
+            <p data-i18n="tip">小提示：上传实拍图后，现场同事能更快确认货品与位置。</p>
           </div>
         </aside>
       </div>
@@ -159,22 +167,22 @@
           <div class="image-upload-row">
             <div class="image-preview" id="imagePreview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Z"></path><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m4 17 4.5-4.5 3 3 2-2L20 19"></path></svg><span>暂无图片</span></div>
             <div class="image-upload-copy">
-              <strong>货品图片</strong>
-              <p>建议上传清晰的正面或货架实拍图</p>
-              <div class="upload-actions"><label for="productImage" class="upload-button">选择图片</label><button id="removeImage" type="button" class="text-button" hidden>移除图片</button></div>
+              <strong data-i18n="productImage">货品图片</strong>
+              <p data-i18n="imageHint">建议上传清晰的正面或货架实拍图</p>
+              <div class="upload-actions"><label for="productImage" class="upload-button" data-i18n="chooseImage">选择图片</label><button id="removeImage" type="button" class="text-button" hidden data-i18n="removeImage">移除图片</button></div>
               <input id="productImage" type="file" accept="image/*" hidden />
             </div>
           </div>
 
           <div class="form-grid">
-            <label class="field full-field"><span>货品编号 <i>*</i></span><input id="productNumber" name="number" required maxlength="40" placeholder="例如：SKU-2408-01" /></label>
-            <label class="field"><span>货品类型 <i>*</i></span><input id="productType" name="type" required maxlength="30" placeholder="例如：护肤品" /></label>
-            <label class="field"><span>所在楼层 <i>*</i></span><select id="productFloor" name="floor" required></select></label>
-            <label class="field"><span>所在区域 <i>*</i></span><select id="productZone" name="zone" required></select></label>
-            <label class="field full-field"><span>细节说明</span><textarea id="productDetails" name="details" rows="4" maxlength="240" placeholder="记录颜色、规格、陈列要求或补货备注…"></textarea><small><span id="detailCount">0</span>/240</small></label>
+            <label class="field full-field"><span data-i18n="productNumber">货品编号 <i>*</i></span><input id="productNumber" name="number" required maxlength="40" placeholder="例如：SKU-2408-01" /></label>
+            <label class="field"><span data-i18n="productType">货品类型 <i>*</i></span><input id="productType" name="type" required maxlength="30" placeholder="例如：护肤品" /></label>
+            <label class="field"><span data-i18n="productFloor">所在楼层 <i>*</i></span><select id="productFloor" name="floor" required></select></label>
+            <label class="field"><span data-i18n="productZone">所在区域 <i>*</i></span><select id="productZone" name="zone" required></select></label>
+            <label class="field full-field"><span data-i18n="details">细节说明</span><textarea id="productDetails" name="details" rows="4" maxlength="240" placeholder="记录颜色、规格、陈列要求或补货备注…"></textarea><small><span id="detailCount">0</span>/240</small></label>
           </div>
         </div>
-        <div class="dialog-footer"><button type="button" id="cancelDialog" class="secondary-button">取消</button><button type="submit" class="primary-button"><span id="saveProductText">保存货品</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></div>
+        <div class="dialog-footer"><button type="button" id="cancelDialog" class="secondary-button" data-i18n="cancel">取消</button><button type="submit" class="primary-button"><span id="saveProductText">保存货品</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></div>
       </form>
     </dialog>
 

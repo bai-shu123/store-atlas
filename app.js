@@ -13,6 +13,93 @@ const ZONE_COPY = {
 };
 
 const STORAGE_KEY = 'store-atlas-products-v1';
+const LANGUAGE_KEY = 'store-atlas-language';
+const TRANSLATIONS = {
+  zh: {
+    title: '店面货品摆放 · 区域台账', brand: '店面货品摆放', navigate: 'NAVIGATE', areas: '摆放区域', storeMap: 'STORE MAP',
+    intro: '按楼层和区域整理陈列信息，现场查找时一眼就能定位。', heroMapLine1: '现场区域', heroMapLine2: '快速定位',
+    floorProducts: '当前楼层货品', occupancy: '区域占用率', lastUpdatedLabel: '最后整理', localStorageHint: '数据保存在本机浏览器',
+    currentZone: 'CURRENT ZONE', export: '导出', addToZone: '添加到本区', emptyTitle: '这个区域还没有货品', emptyCopy: '把第一件货品放进这里，建立你的店面地图。', emptyAdd: '添加第一件货品',
+    zoneNote: 'ZONE NOTE', floorLayout: '楼层布局', tip: '小提示：上传实拍图后，现场同事能更快确认货品与位置。', productImage: '货品图片', imageHint: '建议上传清晰的正面或货架实拍图', chooseImage: '选择图片', removeImage: '移除图片',
+    productNumber: '货品编号 <i>*</i>', productType: '货品类型 <i>*</i>', productFloor: '所在楼层 <i>*</i>', productZone: '所在区域 <i>*</i>', details: '细节说明', cancel: '取消',
+    addProduct: '添加货品', editProduct: '编辑货品', saveProduct: '保存货品', saveChanges: '保存修改', searchPlaceholder: '搜索货品编号、类型或区域…',
+    localSaved: '本地已保存', localMode: '本地模式', cloudSynced: '云端已同步', syncing: '正在同步…', connecting: '正在连接云端…', connectionFail: '云端连接失败',
+    pieces: '件', registered: '件已登记', toOrganize: '件待整理', zones: '个区域', noImage: '暂无图片', noDetails: '暂无细节说明', justUpdated: '刚刚更新', updated: '更新',
+    noResults: '没有找到匹配的货品或区域', imageTooLarge: '图片不能超过 4MB', delete: '删除', deleted: '货品已删除', deleteShared: '货品已从共享数据中删除', deleteFailed: '云端删除失败，本机已删除',
+    savedSyncing: '已保存，正在同步云端…', added: '货品已添加到区域', updatedProduct: '货品信息已更新', syncedAdded: '货品已添加到共享数据', syncedUpdated: '货品信息已同步', syncFailed: '云端同步失败，数据已保存在本机',
+    confirmDelete: '确定删除货品「{{number}}」吗？删除后无法恢复。', floor1: '一楼', floor2: '二楼', floor3: '三楼', floorShort1: '1F', floorShort2: '2F', floorShort3: '3F',
+    entrance: '入口陈列区', experience: '新品体验区', mainPath: '主通道展示区', bundle: '组合陈列区', checkout: '收银邻近区',
+    entranceCopy: '顾客进入店面后的第一视觉触点，适合放置当季主推或高识别度货品。', experienceCopy: '适合需要被触摸、试用或近距离观察的新品与体验型货品。', mainPathCopy: '流动客流经过的位置，建议陈列高频关注、容易被带走的货品。', bundleCopy: '用来放置可以互相搭配的货品，让顾客更容易发现成套购买的选择。', checkoutCopy: '适合小件、补充型或结账前容易顺手带走的货品。'
+  },
+  kk: {
+    title: 'Дүкен тауарлары · Аймақтар тізімі', brand: 'Дүкен тауарлары', navigate: 'БАҒЫТ', areas: 'Орналастыру аймақтары', storeMap: 'ДҮКЕН КАРТАСЫ',
+    intro: 'Тауарларды қабаттар мен аймақтар бойынша реттеңіз — қажетті орынды бірден табыңыз.', heroMapLine1: 'Дүкен аймағы', heroMapLine2: 'Жылдам табу',
+    floorProducts: 'Осы қабаттағы тауар', occupancy: 'Аймақ толуы', lastUpdatedLabel: 'Соңғы реттелуі', localStorageHint: 'Деректер осы браузерде сақталады',
+    currentZone: 'ҚАЗІРГІ АЙМАҚ', export: 'Экспорт', addToZone: 'Осы аймаққа қосу', emptyTitle: 'Бұл аймақта тауар жоқ', emptyCopy: 'Дүкен картаңызды құру үшін алғашқы тауарды қосыңыз.', emptyAdd: 'Алғашқы тауарды қосу',
+    zoneNote: 'АЙМАҚ ЕСКЕРТПЕСІ', floorLayout: 'Қабат жоспары', tip: 'Кеңес: нақты сурет қосылса, қызметкерлер тауар орнын тезірек табады.', productImage: 'Тауар суреті', imageHint: 'Алдыңғы немесе сөре суретін анық етіп жүктеңіз', chooseImage: 'Сурет таңдау', removeImage: 'Суретті өшіру',
+    productNumber: 'Тауар нөмірі <i>*</i>', productType: 'Тауар түрі <i>*</i>', productFloor: 'Қабат <i>*</i>', productZone: 'Аймақ <i>*</i>', details: 'Толық сипаттама', cancel: 'Бас тарту',
+    addProduct: 'Тауар қосу', editProduct: 'Тауарды өңдеу', saveProduct: 'Тауарды сақтау', saveChanges: 'Өзгерістерді сақтау', searchPlaceholder: 'Нөмір, түр немесе аймақ бойынша іздеу…',
+    localSaved: 'Жергілікті сақталды', localMode: 'Жергілікті режим', cloudSynced: 'Бұлтпен синхрондалды', syncing: 'Синхрондалуда…', connecting: 'Бұлтқа қосылуда…', connectionFail: 'Бұлтқа қосылу сәтсіз',
+    pieces: 'дана', registered: 'дана тіркелді', toOrganize: 'дана реттелуде', zones: 'аймақ', noImage: 'Сурет жоқ', noDetails: 'Сипаттама жоқ', justUpdated: 'Жаңа ғана жаңартылды', updated: 'жаңартылды',
+    noResults: 'Сәйкес тауар немесе аймақ табылмады', imageTooLarge: 'Сурет 4 МБ-тан аспауы керек', delete: 'Өшіру', deleted: 'Тауар өшірілді', deleteShared: 'Тауар ортақ деректерден өшірілді', deleteFailed: 'Бұлттан өшіру сәтсіз, жергілікті дерек өшірілді',
+    savedSyncing: 'Сақталды, бұлтпен синхрондалуда…', added: 'Тауар аймаққа қосылды', updatedProduct: 'Тауар жаңартылды', syncedAdded: 'Тауар ортақ дерекке қосылды', syncedUpdated: 'Тауар бұлтта жаңартылды', syncFailed: 'Бұлтпен синхрондау сәтсіз, дерек жергілікті сақталды',
+    confirmDelete: '«{{number}}» тауарын өшіру керек пе? Бұл әрекетті қайтару мүмкін емес.', floor1: '1-қабат', floor2: '2-қабат', floor3: '3-қабат', floorShort1: '1F', floorShort2: '2F', floorShort3: '3F',
+    entrance: 'Кіреберіс витринасы', experience: 'Жаңа тауар аймағы', mainPath: 'Негізгі жол витринасы', bundle: 'Жинақ витринасы', checkout: 'Касса маңы',
+    entranceCopy: 'Клиент кіргендегі алғашқы көрініс. Маусымдық және негізгі тауарларға қолайлы.', experienceCopy: 'Ұстап көруді немесе сынауды қажет ететін жаңа тауарларға арналған.', mainPathCopy: 'Көп адам өтетін жол. Жиі таңдалатын тауарларды орналастырыңыз.', bundleCopy: 'Бірге қолданылатын тауарларды қатар көрсетіп, жинақ сатып алуды жеңілдетеді.', checkoutCopy: 'Ұсақ, қосымша немесе касса алдында алынатын тауарларға қолайлы.'
+  },
+  ru: {
+    title: 'Раскладка магазина · Карта зон', brand: 'Раскладка магазина', navigate: 'НАВИГАЦИЯ', areas: 'Зоны размещения', storeMap: 'КАРТА МАГАЗИНА',
+    intro: 'Организуйте выкладку по этажам и зонам, чтобы сразу находить нужное место.', heroMapLine1: 'Зона магазина', heroMapLine2: 'Быстрый поиск',
+    floorProducts: 'Товары на этаже', occupancy: 'Загрузка зон', lastUpdatedLabel: 'Последняя сортировка', localStorageHint: 'Данные сохранены в этом браузере',
+    currentZone: 'ТЕКУЩАЯ ЗОНА', export: 'Экспорт', addToZone: 'Добавить в зону', emptyTitle: 'В этой зоне пока нет товаров', emptyCopy: 'Добавьте первый товар и создайте карту магазина.', emptyAdd: 'Добавить первый товар',
+    zoneNote: 'ЗАМЕТКА ЗОНЫ', floorLayout: 'План этажа', tip: 'Совет: реальное фото поможет сотрудникам быстрее найти товар и его место.', productImage: 'Фото товара', imageHint: 'Загрузите чёткое фото товара или полки', chooseImage: 'Выбрать фото', removeImage: 'Удалить фото',
+    productNumber: 'Артикул <i>*</i>', productType: 'Тип товара <i>*</i>', productFloor: 'Этаж <i>*</i>', productZone: 'Зона <i>*</i>', details: 'Описание', cancel: 'Отмена',
+    addProduct: 'Добавить товар', editProduct: 'Изменить товар', saveProduct: 'Сохранить товар', saveChanges: 'Сохранить изменения', searchPlaceholder: 'Поиск по артикулу, типу или зоне…',
+    localSaved: 'Сохранено локально', localMode: 'Локальный режим', cloudSynced: 'Синхронизировано', syncing: 'Синхронизация…', connecting: 'Подключение к облаку…', connectionFail: 'Ошибка подключения к облаку',
+    pieces: 'шт.', registered: 'шт. зарегистрировано', toOrganize: 'шт. на учёте', zones: 'зон', noImage: 'Нет фото', noDetails: 'Нет описания', justUpdated: 'Только что обновлено', updated: 'обновлено',
+    noResults: 'Подходящие товары или зоны не найдены', imageTooLarge: 'Размер фото не должен превышать 4 МБ', delete: 'Удалить', deleted: 'Товар удалён', deleteShared: 'Товар удалён из общих данных', deleteFailed: 'Не удалось удалить из облака, локальная запись удалена',
+    savedSyncing: 'Сохранено, синхронизация…', added: 'Товар добавлен в зону', updatedProduct: 'Данные товара обновлены', syncedAdded: 'Товар добавлен в общие данные', syncedUpdated: 'Данные товара синхронизированы', syncFailed: 'Ошибка синхронизации, данные сохранены локально',
+    confirmDelete: 'Удалить товар «{{number}}»? Это действие нельзя отменить.', floor1: '1 этаж', floor2: '2 этаж', floor3: '3 этаж', floorShort1: '1F', floorShort2: '2F', floorShort3: '3F',
+    entrance: 'Входная витрина', experience: 'Зона новинок', mainPath: 'Витрина главного прохода', bundle: 'Зона комплектов', checkout: 'Зона у кассы',
+    entranceCopy: 'Первый визуальный контакт после входа. Подходит для сезонных и ключевых товаров.', experienceCopy: 'Для новинок, которые нужно потрогать, протестировать или рассмотреть.', mainPathCopy: 'Место активного потока покупателей. Размещайте часто выбираемые товары.', bundleCopy: 'Показывает товары, которые хорошо сочетаются, и помогает собрать комплект.', checkoutCopy: 'Подходит для небольших, дополнительных товаров и покупок у кассы.'
+  }
+};
+
+function t(key, params = {}) {
+  const dictionary = TRANSLATIONS[state?.language] || TRANSLATIONS.zh;
+  let value = dictionary[key] ?? TRANSLATIONS.zh[key] ?? key;
+  Object.entries(params).forEach(([name, replacement]) => { value = value.replaceAll(`{{${name}}}`, replacement); });
+  return value;
+}
+
+function floorLabel(floor) {
+  return t(floor === '1F' ? 'floor1' : floor === '2F' ? 'floor2' : 'floor3');
+}
+
+function floorShortLabel(floor) {
+  return t(floor === '1F' ? 'floorShort1' : floor === '2F' ? 'floorShort2' : 'floorShort3');
+}
+
+function zoneCopy(zone) {
+  const map = { A: ['entrance', 'entranceCopy'], B: ['experience', 'experienceCopy'], C: ['mainPath', 'mainPathCopy'], D: ['bundle', 'bundleCopy'], E: ['checkout', 'checkoutCopy'] };
+  const keys = map[zone];
+  return keys ? [t(keys[0]), t(keys[1])] : [state.language === 'ru' ? `Зона ${zone}` : state.language === 'kk' ? `${zone} аймағы` : `${zone} 区`, state.language === 'ru' ? 'Добавьте описание зоны в деталях товаров.' : state.language === 'kk' ? 'Бұл аймақтың сипаттамасын тауар мәліметтерінде қосыңыз.' : '这个区域还没有备注，可以在货品细节中补充陈列要求。'];
+}
+
+function applyLanguage() {
+  document.documentElement.lang = state.language === 'zh' ? 'zh-CN' : state.language === 'kk' ? 'kk' : 'ru';
+  document.title = t('title');
+  $('.brand-name').textContent = t('brand');
+  $$('[data-i18n]').forEach((element) => { element.innerHTML = t(element.dataset.i18n); });
+  $('#globalSearch').placeholder = t('searchPlaceholder');
+  $('#quickAdd span').textContent = t('addProduct');
+  $('.sync-status span:last-child').textContent = state.remoteEnabled ? t('cloudSynced') : t('localMode');
+  $('#languageSelect').value = state.language;
+  $('#dialogTitle').textContent = state.editingId ? t('editProduct') : t('addProduct');
+  $('#saveProductText').textContent = state.editingId ? t('saveChanges') : t('saveProduct');
+  $('#imagePreview span')?.replaceChildren(document.createTextNode(t('noImage')));
+  $('#productDetails').placeholder = state.language === 'zh' ? '记录颜色、规格、陈列要求或补货备注…' : state.language === 'ru' ? 'Цвет, размер, требования к выкладке или заметки…' : 'Түсі, өлшемі, орналастыру талабы немесе толықтыру ескертпесі…';
+}
 const STORE_ATLAS_CONFIG = window.STORE_ATLAS_CONFIG || {};
 let remoteClient = null;
 const seedProducts = [
@@ -30,6 +117,7 @@ const state = {
   products: loadProducts(),
   editingId: null,
   query: '',
+  language: localStorage.getItem(LANGUAGE_KEY) || 'zh',
   remoteEnabled: false
 };
 
@@ -91,17 +179,17 @@ function toRemoteProduct(product) {
 
 async function initRemote() {
   if (!remoteConfigured()) {
-    setSyncStatus('本地模式');
+    setSyncStatus(t('localMode'));
     return;
   }
   remoteClient = window.supabase.createClient(STORE_ATLAS_CONFIG.url, STORE_ATLAS_CONFIG.anonKey);
   state.remoteEnabled = true;
-  setSyncStatus('正在连接云端…', 'busy');
+  setSyncStatus(t('connecting'), 'busy');
   const { data, error } = await remoteClient.from('products').select('*').order('updated_at', { ascending: false });
   if (error) {
     console.error('Supabase load failed', error);
-    setSyncStatus('云端连接失败', 'error');
-    showToast('云端连接失败，暂时使用本机数据');
+    setSyncStatus(t('connectionFail'), 'error');
+    showToast(`${t('connectionFail')}，${t('localMode')}`);
     return;
   }
   if (data.length) {
@@ -111,7 +199,7 @@ async function initRemote() {
     if (!seedError) state.products = seedProducts;
   }
   saveProducts();
-  setSyncStatus('云端已同步');
+  setSyncStatus(t('cloudSynced'));
   renderAll();
 }
 
@@ -146,10 +234,10 @@ function escapeHTML(value = '') {
 }
 
 function formatDate(value) {
-  if (!value) return '刚刚更新';
+  if (!value) return t('justUpdated');
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '刚刚更新';
-  return `${date.getMonth() + 1}/${date.getDate()} 更新`;
+  if (Number.isNaN(date.getTime())) return t('justUpdated');
+  return state.language === 'zh' ? `${date.getMonth() + 1}/${date.getDate()} ${t('updated')}` : `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')} ${t('updated')}`;
 }
 
 function floorProducts(floor = state.floor) {
@@ -165,6 +253,7 @@ function productCountForZone(floor, zone) {
 }
 
 function renderAll() {
+  applyLanguage();
   renderNavigation();
   renderMobileFloorBar();
   renderHeaderStats();
@@ -177,16 +266,16 @@ function renderNavigation() {
   const nav = $('#floorNav');
   nav.innerHTML = Object.entries(FLOORS).map(([floor, data], floorIndex) => {
     const total = floorProducts(floor).length;
-    const zones = data.zones.map((zone) => `<button class="zone-button ${state.floor === floor && state.zone === zone ? 'active' : ''} ${productCountForZone(floor, zone) ? 'occupied' : ''}" data-zone="${zone}" data-floor="${floor}" aria-label="${data.label} ${zone} 区，${productCountForZone(floor, zone)} 件货品">${zone}</button>`).join('');
-    return `<div class="floor-group"><button class="floor-button ${state.floor === floor ? 'active' : ''}" data-floor-only="${floor}"><span class="floor-label"><span class="floor-number">0${floorIndex + 1}</span>${data.label}</span><span class="floor-total">${total} 件</span></button><div class="zone-list">${zones}</div></div>`;
+    const zones = data.zones.map((zone) => `<button class="zone-button ${state.floor === floor && state.zone === zone ? 'active' : ''} ${productCountForZone(floor, zone) ? 'occupied' : ''}" data-zone="${zone}" data-floor="${floor}" aria-label="${floorLabel(floor)} ${zone} ${state.language === 'ru' ? 'зона' : state.language === 'kk' ? 'аймағы' : '区'}，${productCountForZone(floor, zone)} ${t('pieces')}">${zone}</button>`).join('');
+    return `<div class="floor-group"><button class="floor-button ${state.floor === floor ? 'active' : ''}" data-floor-only="${floor}"><span class="floor-label"><span class="floor-number">0${floorIndex + 1}</span>${floorLabel(floor)}</span><span class="floor-total">${total} ${t('pieces')}</span></button><div class="zone-list">${zones}</div></div>`;
   }).join('');
-  $('#zoneCount').textContent = `${Object.values(FLOORS).reduce((sum, floor) => sum + floor.zones.length, 0)} 区`;
+  $('#zoneCount').textContent = `${Object.values(FLOORS).reduce((sum, floor) => sum + floor.zones.length, 0)} ${t('zones')}`;
   $$('.floor-button').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.floorOnly)));
   $$('.zone-button').forEach((button) => button.addEventListener('click', () => selectZone(button.dataset.floor, button.dataset.zone)));
 }
 
 function renderMobileFloorBar() {
-  $('#mobileFloorBar').innerHTML = Object.entries(FLOORS).map(([floor, data]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${data.label} <span>${floorProducts(floor).length}</span></button>`).join('');
+  $('#mobileFloorBar').innerHTML = Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('');
   $$('.mobile-floor-button').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.mobileFloor)));
 }
 
@@ -195,20 +284,20 @@ function renderHeaderStats() {
   const products = floorProducts();
   const occupied = data.zones.filter((zone) => productCountForZone(state.floor, zone) > 0).length;
   const latest = [...products].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
-  $('#activeFloorLabel').textContent = data.label;
+  $('#activeFloorLabel').textContent = floorLabel(state.floor);
   $('#floorProductCount').textContent = products.length;
-  $('#floorProductHint').textContent = products.length === 1 ? '件待整理' : '件已登记';
+  $('#floorProductHint').textContent = products.length === 1 ? t('toOrganize') : t('registered');
   $('#occupancyRate').textContent = `${Math.round((occupied / data.zones.length) * 100)}%`;
-  $('#occupancyHint').textContent = `${occupied} / ${data.zones.length} 个区域`;
+  $('#occupancyHint').textContent = `${occupied} / ${data.zones.length} ${t('zones')}`;
   $('#lastUpdated').textContent = latest ? formatDate(latest.updatedAt) : '—';
 }
 
 function renderArea() {
   const data = FLOORS[state.floor];
-  const copy = ZONE_COPY[state.zone] || [`${state.zone} 区`, '这个区域还没有备注，可以在货品细节中补充陈列要求。'];
-  $('#currentAreaName').textContent = `${state.zone} 区`;
-  $('#currentAreaMeta').textContent = `${data.label} · ${copy[0]}`;
-  $('#zoneMap').innerHTML = data.zones.map((zone) => `<button class="map-zone ${state.zone === zone ? 'active' : ''} ${productCountForZone(state.floor, zone) ? 'occupied' : ''}" data-map-zone="${zone}">${zone}<span class="sr-only"> ${productCountForZone(state.floor, zone)} 件货品</span></button>`).join('');
+  const copy = zoneCopy(state.zone);
+  $('#currentAreaName').textContent = state.language === 'zh' ? `${state.zone} 区` : `${state.zone} ${state.language === 'ru' ? 'зона' : 'аймағы'}`;
+  $('#currentAreaMeta').textContent = `${floorLabel(state.floor)} · ${copy[0]}`;
+  $('#zoneMap').innerHTML = data.zones.map((zone) => `<button class="map-zone ${state.zone === zone ? 'active' : ''} ${productCountForZone(state.floor, zone) ? 'occupied' : ''}" data-map-zone="${zone}">${zone}<span class="sr-only"> ${productCountForZone(state.floor, zone)} ${t('pieces')}</span></button>`).join('');
   $$('.map-zone').forEach((button) => button.addEventListener('click', () => selectZone(state.floor, button.dataset.mapZone)));
 
   const products = zoneProducts();
@@ -219,23 +308,24 @@ function renderArea() {
 }
 
 function productCard(product) {
-  const image = product.image ? `<img src="${product.image}" alt="${escapeHTML(product.number)} 图片" />` : `<span class="placeholder-mark">${escapeHTML(product.zone)}</span>`;
-  return `<article class="product-card"><div class="product-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="product-info"><span class="product-location">${escapeHTML(product.floor)} / ${escapeHTML(product.zone)}</span><h3 class="product-number" title="${escapeHTML(product.number)}">${escapeHTML(product.number)}</h3><p class="product-type">${escapeHTML(product.type)}</p><p class="product-details">${escapeHTML(product.details || '暂无细节说明')}</p><div class="product-card-footer"><span class="product-date">${formatDate(product.updatedAt)}</span><div class="card-actions"><button class="card-action edit-product" data-id="${product.id}" aria-label="编辑 ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0-3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg></button><button class="card-action delete delete-product" data-id="${product.id}" aria-label="删除 ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div></div></article>`;
+  const image = product.image ? `<img src="${product.image}" alt="${escapeHTML(product.number)}" />` : `<span class="placeholder-mark">${escapeHTML(product.zone)}</span>`;
+  const location = state.language === 'zh' ? `${product.floor} / ${product.zone}` : `${floorShortLabel(product.floor)} / ${product.zone}`;
+  return `<article class="product-card"><div class="product-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="product-info"><span class="product-location">${escapeHTML(location)}</span><h3 class="product-number" title="${escapeHTML(product.number)}">${escapeHTML(product.number)}</h3><p class="product-type">${escapeHTML(product.type)}</p><p class="product-details">${escapeHTML(product.details || t('noDetails'))}</p><div class="product-card-footer"><span class="product-date">${formatDate(product.updatedAt)}</span><div class="card-actions"><button class="card-action edit-product" data-id="${product.id}" aria-label="${escapeHTML(t('editProduct'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0-3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg></button><button class="card-action delete delete-product" data-id="${product.id}" aria-label="${escapeHTML(t('delete'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div></div></article>`;
 }
 
 function renderInspector() {
   const data = FLOORS[state.floor];
-  const copy = ZONE_COPY[state.zone] || [`${state.zone} 区`, '这个区域还没有备注，可以在货品细节中补充陈列要求。'];
+  const copy = zoneCopy(state.zone);
   const products = zoneProducts();
   const imageCount = products.filter((product) => product.image).length;
   $('#inspectorZone').textContent = state.zone;
   $('#inspectorTitle').textContent = copy[0];
   $('#inspectorCopy').textContent = copy[1];
-  $('#inspectorFloor').textContent = data.label;
-  $('#inspectorProducts').textContent = `${products.length} 件`;
+  $('#inspectorFloor').textContent = floorLabel(state.floor);
+  $('#inspectorProducts').textContent = `${products.length} ${t('pieces')}`;
   $('#inspectorImages').textContent = `${products.length ? Math.round((imageCount / products.length) * 100) : 0}%`;
   $('#miniMapLabel').textContent = state.floor;
-  $('#miniMap').innerHTML = data.zones.map((zone) => `<button class="mini-map-zone ${productCountForZone(state.floor, zone) ? 'occupied' : ''} ${state.zone === zone ? 'active' : ''}" data-mini-zone="${zone}" aria-label="${zone} 区">${zone}</button>`).join('');
+  $('#miniMap').innerHTML = data.zones.map((zone) => `<button class="mini-map-zone ${productCountForZone(state.floor, zone) ? 'occupied' : ''} ${state.zone === zone ? 'active' : ''}" data-mini-zone="${zone}" aria-label="${zone} ${state.language === 'ru' ? 'зона' : state.language === 'kk' ? 'аймағы' : '区'}">${zone}</button>`).join('');
   $$('.mini-map-zone').forEach((button) => button.addEventListener('click', () => selectZone(state.floor, button.dataset.miniZone)));
 }
 
@@ -258,9 +348,9 @@ function selectZone(floor, zone) {
 
 function openAdd() {
   state.editingId = null;
-  $('#dialogEyebrow').textContent = 'ADD PRODUCT';
-  $('#dialogTitle').textContent = '添加货品';
-  $('#saveProductText').textContent = '保存货品';
+  $('#dialogEyebrow').textContent = t('addProduct');
+  $('#dialogTitle').textContent = t('addProduct');
+  $('#saveProductText').textContent = t('saveProduct');
   $('#productForm').reset();
   fillFloorOptions(state.floor, state.zone);
   setImagePreview('');
@@ -273,9 +363,9 @@ function openEdit(id) {
   const product = state.products.find((item) => item.id === id);
   if (!product) return;
   state.editingId = id;
-  $('#dialogEyebrow').textContent = 'EDIT PRODUCT';
-  $('#dialogTitle').textContent = '编辑货品';
-  $('#saveProductText').textContent = '保存修改';
+  $('#dialogEyebrow').textContent = t('editProduct');
+  $('#dialogTitle').textContent = t('editProduct');
+  $('#saveProductText').textContent = t('saveChanges');
   $('#productNumber').value = product.number;
   $('#productType').value = product.type;
   $('#productDetails').value = product.details || '';
@@ -287,17 +377,17 @@ function openEdit(id) {
 }
 
 function fillFloorOptions(selectedFloor, selectedZone) {
-  $('#productFloor').innerHTML = Object.entries(FLOORS).map(([floor, data]) => `<option value="${floor}" ${floor === selectedFloor ? 'selected' : ''}>${data.label}（${floor}）</option>`).join('');
+  $('#productFloor').innerHTML = Object.entries(FLOORS).map(([floor]) => `<option value="${floor}" ${floor === selectedFloor ? 'selected' : ''}>${floorLabel(floor)}（${floor}）</option>`).join('');
   const renderZones = () => {
     const floor = $('#productFloor').value;
-    $('#productZone').innerHTML = FLOORS[floor].zones.map((zone) => `<option value="${zone}" ${zone === selectedZone && floor === selectedFloor ? 'selected' : ''}>${zone} 区</option>`).join('');
+    $('#productZone').innerHTML = FLOORS[floor].zones.map((zone) => `<option value="${zone}" ${zone === selectedZone && floor === selectedFloor ? 'selected' : ''}>${zone} ${state.language === 'ru' ? 'зона' : state.language === 'kk' ? 'аймағы' : '区'}</option>`).join('');
   };
   renderZones();
   $('#productFloor').onchange = renderZones;
 }
 
 function setImagePreview(src) {
-  $('#imagePreview').innerHTML = src ? `<img src="${src}" alt="货品预览" />` : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Z"></path><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m4 17 4.5-4.5 3 3 2-2L20 19"></path></svg><span>暂无图片</span>`;
+  $('#imagePreview').innerHTML = src ? `<img src="${src}" alt="${escapeHTML(t('productImage'))}" />` : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Z"></path><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m4 17 4.5-4.5 3 3 2-2L20 19"></path></svg><span>${escapeHTML(t('noImage'))}</span>`;
   $('#removeImage').hidden = !src;
   $('#productImage').dataset.value = src || '';
 }
@@ -305,20 +395,20 @@ function setImagePreview(src) {
 async function deleteProduct(id) {
   const product = state.products.find((item) => item.id === id);
   if (!product) return;
-  if (!window.confirm(`确定删除货品「${product.number}」吗？删除后无法恢复。`)) return;
+  if (!window.confirm(t('confirmDelete', { number: product.number }))) return;
   state.products = state.products.filter((item) => item.id !== id);
   saveProducts();
   renderAll();
-  showToast(state.remoteEnabled ? '货品已删除，正在同步云端…' : '货品已删除');
+  showToast(state.remoteEnabled ? t('savedSyncing') : t('deleted'));
   if (state.remoteEnabled) {
     try {
       await removeRemoteProduct(id);
       setSyncStatus('云端已同步');
-      showToast('货品已从共享数据中删除');
+      showToast(t('deleteShared'));
     } catch (error) {
       console.error('Supabase delete failed', error);
-      setSyncStatus('同步失败', 'error');
-      showToast('云端删除失败，本机已删除');
+      setSyncStatus(t('connectionFail'), 'error');
+      showToast(t('deleteFailed'));
     }
   }
 }
@@ -327,8 +417,8 @@ function renderSearchResults() {
   const query = state.query.trim().toLowerCase();
   const panel = $('#searchResults');
   if (!query) { panel.hidden = true; return; }
-  const results = state.products.filter((product) => [product.number, product.type, product.details, product.zone, product.floor, FLOORS[product.floor]?.label].join(' ').toLowerCase().includes(query)).slice(0, 8);
-  panel.innerHTML = results.length ? results.map((product) => `<button class="search-result" data-search-id="${product.id}"><span class="search-result-thumb">${product.image ? `<img src="${product.image}" alt="" />` : escapeHTML(product.zone)}</span><span class="search-result-main"><strong>${escapeHTML(product.number)}</strong><span>${escapeHTML(product.type)} · ${escapeHTML(FLOORS[product.floor]?.label || product.floor)} ${escapeHTML(product.zone)} 区</span></span></button>`).join('') : '<div class="search-empty">没有找到匹配的货品或区域</div>';
+  const results = state.products.filter((product) => [product.number, product.type, product.details, product.zone, product.floor, floorLabel(product.floor)].join(' ').toLowerCase().includes(query)).slice(0, 8);
+  panel.innerHTML = results.length ? results.map((product) => `<button class="search-result" data-search-id="${product.id}"><span class="search-result-thumb">${product.image ? `<img src="${product.image}" alt="" />` : escapeHTML(product.zone)}</span><span class="search-result-main"><strong>${escapeHTML(product.number)}</strong><span>${escapeHTML(product.type)} · ${escapeHTML(floorLabel(product.floor))} ${escapeHTML(product.zone)} ${state.language === 'ru' ? 'зона' : state.language === 'kk' ? 'аймағы' : '区'}</span></span></button>`).join('') : `<div class="search-empty">${escapeHTML(t('noResults'))}</div>`;
   panel.hidden = false;
   $$('.search-result').forEach((button) => button.addEventListener('click', () => {
     const product = state.products.find((item) => item.id === button.dataset.searchId);
@@ -356,7 +446,7 @@ function exportData() {
   anchor.download = `店面货品摆放-${new Date().toISOString().slice(0, 10)}.json`;
   anchor.click();
   URL.revokeObjectURL(url);
-  showToast('货品数据已导出');
+  showToast(state.language === 'ru' ? 'Данные товаров экспортированы' : state.language === 'kk' ? 'Тауар деректері экспортталды' : '货品数据已导出');
 }
 
 $('#quickAdd').addEventListener('click', openAdd);
@@ -372,12 +462,17 @@ $('#clearSearch').addEventListener('click', () => { state.query = ''; $('#global
 $('#productImage').addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (!file) return;
-  if (file.size > 4 * 1024 * 1024) { showToast('图片不能超过 4MB'); event.target.value = ''; return; }
+  if (file.size > 4 * 1024 * 1024) { showToast(t('imageTooLarge')); event.target.value = ''; return; }
   const reader = new FileReader();
   reader.onload = () => setImagePreview(reader.result);
   reader.readAsDataURL(file);
 });
 $('#removeImage').addEventListener('click', () => { setImagePreview(''); $('#productImage').value = ''; });
+$('#languageSelect').addEventListener('change', (event) => {
+  state.language = event.target.value;
+  localStorage.setItem(LANGUAGE_KEY, state.language);
+  renderAll();
+});
 $('#productForm').addEventListener('submit', async (event) => {
   event.preventDefault();
   const product = { number: $('#productNumber').value.trim(), type: $('#productType').value.trim(), floor: $('#productFloor').value, zone: $('#productZone').value, details: $('#productDetails').value.trim(), image: $('#productImage').dataset.value || '', updatedAt: new Date().toISOString() };
@@ -395,20 +490,20 @@ $('#productForm').addEventListener('submit', async (event) => {
   state.zone = product.zone;
   $('#productDialog').close();
   renderAll();
-  showToast(state.remoteEnabled ? '已保存，正在同步云端…' : (state.editingId ? '货品信息已更新' : '货品已添加到区域'));
+  showToast(state.remoteEnabled ? t('savedSyncing') : (state.editingId ? t('updatedProduct') : t('added')));
   if (state.remoteEnabled) {
     try {
-      setSyncStatus('正在同步…', 'busy');
+      setSyncStatus(t('syncing'), 'busy');
       const syncedProduct = await upsertRemoteProduct(savedProduct);
       state.products = state.products.map((item) => item.id === syncedProduct.id ? syncedProduct : item);
       saveProducts();
-      setSyncStatus('云端已同步');
+      setSyncStatus(t('cloudSynced'));
       renderAll();
-      showToast(state.editingId ? '货品信息已同步' : '货品已添加到共享数据');
+      showToast(state.editingId ? t('syncedUpdated') : t('syncedAdded'));
     } catch (error) {
       console.error('Supabase save failed', error);
-      setSyncStatus('同步失败', 'error');
-      showToast('云端同步失败，数据已保存在本机');
+      setSyncStatus(t('connectionFail'), 'error');
+      showToast(t('syncFailed'));
     }
   }
 });
