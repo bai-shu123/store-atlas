@@ -112,7 +112,7 @@ svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-wi
 .pin-e { top: 70px; left: 9px; color: white; background: var(--coral); }
 .hero-caption { position: absolute; bottom: 7px; right: 3px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 9px; line-height: 1.5; text-align: right; }
 
-.metrics-row { display: grid; grid-template-columns: 1fr 1fr 1.35fr; gap: 11px; margin: 18px 0 49px; }
+.metrics-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 11px; margin: 18px 0 49px; }
 .metric-card { min-height: 94px; padding: 17px 18px 14px; border: 1px solid var(--line); background: rgba(255,255,255,.6); border-radius: 13px; display: flex; flex-direction: column; }
 .metric-primary { background: var(--ink); color: white; border-color: var(--ink); }
 .metric-label, .metric-foot { color: var(--muted); font-size: 10px; }
@@ -270,8 +270,7 @@ svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-wi
   .welcome-row h1 { font-size: 36px; max-width: 320px; }
   .hero-visual { width: 120px; height: 125px; margin: 0 -9px 0 3px; transform: scale(.8); transform-origin: top right; }
   .intro-copy { max-width: 250px; }
-  .metrics-row { grid-template-columns: 1fr 1fr; margin: 25px 0 36px; }
-  .metric-wide { grid-column: 1 / -1; min-height: 74px; }
+  .metrics-row { grid-template-columns: 1fr; margin: 25px 0 36px; }
   .section-heading { align-items: flex-start; flex-direction: column; margin-bottom: 16px; }
   .section-actions { width: 100%; }
   .section-actions > * { flex: 1; }

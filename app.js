@@ -51,7 +51,7 @@ const TRANSLATIONS = {
   zh: {
     title: '店面货品摆放 · 区域台账', brand: '店面货品摆放', navigate: 'NAVIGATE', areas: '摆放区域', storeMap: 'STORE MAP',
     intro: '按楼层和区域整理陈列信息，现场查找时一眼就能定位。', heroMapLine1: '现场区域', heroMapLine2: '快速定位',
-    floorProducts: '当前楼层货品', occupancy: '区域占用率', lastUpdatedLabel: '最后整理', localStorageHint: '数据保存在本机浏览器', refreshData: '刷新云端数据', refreshingData: '正在刷新云端数据…', refreshed: '云端数据已刷新', refreshFailed: '刷新失败，请检查云端连接',
+    floorProducts: '当前楼层货品', refreshData: '刷新云端数据', refreshingData: '正在刷新云端数据…', refreshed: '云端数据已刷新', refreshFailed: '刷新失败，请检查云端连接',
     currentZone: 'CURRENT ZONE', export: '导出', addToZone: '添加到本区', emptyTitle: '这个区域还没有货品', emptyCopy: '把第一件货品放进这里，建立你的店面地图。', emptyAdd: '添加第一件货品',
     zoneNote: 'ZONE NOTE', floorLayout: '楼层布局', tip: '小提示：上传实拍图后，现场同事能更快确认货品与位置。', productImage: '货品图片', imageHint: '建议上传清晰的正面或货架实拍图', chooseImage: '选择图片', removeImage: '移除图片',
     productNumber: '货品编号 <i>*</i>', productType: '货品类型 <i>*</i>', productFloor: '所在楼层 <i>*</i>', productZone: '所在区域 <i>*</i>', details: '细节说明', cancel: '取消',
@@ -67,7 +67,7 @@ const TRANSLATIONS = {
   kk: {
     title: 'Дүкен тауарлары · Аймақтар тізімі', brand: 'Дүкен тауарлары', navigate: 'БАҒЫТ', areas: 'Орналастыру аймақтары', storeMap: 'ДҮКЕН КАРТАСЫ',
     intro: 'Тауарларды қабаттар мен аймақтар бойынша реттеңіз — қажетті орынды бірден табыңыз.', heroMapLine1: 'Дүкен аймағы', heroMapLine2: 'Жылдам табу',
-    floorProducts: 'Осы қабаттағы тауар', occupancy: 'Аймақ толуы', lastUpdatedLabel: 'Соңғы реттелуі', localStorageHint: 'Деректер осы браузерде сақталады', refreshData: 'Бұлттағы деректерді жаңарту', refreshingData: 'Бұлттағы деректер жаңартылуда…', refreshed: 'Бұлттағы деректер жаңартылды', refreshFailed: 'Жаңарту сәтсіз, бұлт байланысын тексеріңіз',
+    floorProducts: 'Осы қабаттағы тауар', refreshData: 'Бұлттағы деректерді жаңарту', refreshingData: 'Бұлттағы деректер жаңартылуда…', refreshed: 'Бұлттағы деректер жаңартылды', refreshFailed: 'Жаңарту сәтсіз, бұлт байланысын тексеріңіз',
     currentZone: 'ҚАЗІРГІ АЙМАҚ', export: 'Экспорт', addToZone: 'Осы аймаққа қосу', emptyTitle: 'Бұл аймақта тауар жоқ', emptyCopy: 'Дүкен картаңызды құру үшін алғашқы тауарды қосыңыз.', emptyAdd: 'Алғашқы тауарды қосу',
     zoneNote: 'АЙМАҚ ЕСКЕРТПЕСІ', floorLayout: 'Қабат жоспары', tip: 'Кеңес: нақты сурет қосылса, қызметкерлер тауар орнын тезірек табады.', productImage: 'Тауар суреті', imageHint: 'Алдыңғы немесе сөре суретін анық етіп жүктеңіз', chooseImage: 'Сурет таңдау', removeImage: 'Суретті өшіру',
     productNumber: 'Тауар нөмірі <i>*</i>', productType: 'Тауар түрі <i>*</i>', productFloor: 'Қабат <i>*</i>', productZone: 'Аймақ <i>*</i>', details: 'Толық сипаттама', cancel: 'Бас тарту',
@@ -83,7 +83,7 @@ const TRANSLATIONS = {
   ru: {
     title: 'Раскладка магазина · Карта зон', brand: 'Раскладка магазина', navigate: 'НАВИГАЦИЯ', areas: 'Зоны размещения', storeMap: 'КАРТА МАГАЗИНА',
     intro: 'Организуйте выкладку по этажам и зонам, чтобы сразу находить нужное место.', heroMapLine1: 'Зона магазина', heroMapLine2: 'Быстрый поиск',
-    floorProducts: 'Товары на этаже', occupancy: 'Загрузка зон', lastUpdatedLabel: 'Последняя сортировка', localStorageHint: 'Данные сохранены в этом браузере', refreshData: 'Обновить облачные данные', refreshingData: 'Обновление облачных данных…', refreshed: 'Облачные данные обновлены', refreshFailed: 'Не удалось обновить, проверьте облачное соединение',
+    floorProducts: 'Товары на этаже', refreshData: 'Обновить облачные данные', refreshingData: 'Обновление облачных данных…', refreshed: 'Облачные данные обновлены', refreshFailed: 'Не удалось обновить, проверьте облачное соединение',
     currentZone: 'ТЕКУЩАЯ ЗОНА', export: 'Экспорт', addToZone: 'Добавить в зону', emptyTitle: 'В этой зоне пока нет товаров', emptyCopy: 'Добавьте первый товар и создайте карту магазина.', emptyAdd: 'Добавить первый товар',
     zoneNote: 'ЗАМЕТКА ЗОНЫ', floorLayout: 'План этажа', tip: 'Совет: реальное фото поможет сотрудникам быстрее найти товар и его место.', productImage: 'Фото товара', imageHint: 'Загрузите чёткое фото товара или полки', chooseImage: 'Выбрать фото', removeImage: 'Удалить фото',
     productNumber: 'Артикул <i>*</i>', productType: 'Тип товара <i>*</i>', productFloor: 'Этаж <i>*</i>', productZone: 'Зона <i>*</i>', details: 'Описание', cancel: 'Отмена',
@@ -140,7 +140,6 @@ function applyLanguage() {
   $('#globalSearch').placeholder = t('searchPlaceholder');
   $('#quickAdd span').textContent = t('addProduct');
   $('.sync-status span:last-child').textContent = state.remoteEnabled ? t('cloudSynced') : t('localMode');
-  $('#storageHint').textContent = state.remoteEnabled ? t('cloudSynced') : t('localStorageHint');
   $('#refreshData')?.setAttribute('aria-label', t('refreshData'));
   $('#refreshData')?.setAttribute('title', t('refreshData'));
   renderLocationRules();
@@ -363,16 +362,10 @@ function renderMobileFloorBar() {
 }
 
 function renderHeaderStats() {
-  const data = FLOORS[state.floor];
   const products = floorProducts();
-  const occupied = data.zones.filter((zone) => productCountForZone(state.floor, zone) > 0).length;
-  const latest = [...products].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
   $('#activeFloorLabel').textContent = floorLabel(state.floor);
   $('#floorProductCount').textContent = products.length;
   $('#floorProductHint').textContent = products.length === 1 ? t('toOrganize') : t('registered');
-  $('#occupancyRate').textContent = `${Math.round((occupied / data.zones.length) * 100)}%`;
-  $('#occupancyHint').textContent = `${occupied} / ${data.zones.length} ${t('zones')}`;
-  $('#lastUpdated').textContent = latest ? formatDate(latest.updatedAt) : '—';
 }
 
 function renderArea() {
