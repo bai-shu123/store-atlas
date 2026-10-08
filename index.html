@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#112231" />
     <title>店面货品摆放 · 区域台账</title>
-    <link rel="stylesheet" href="styles.css?v=rules-20261008" />
+    <link rel="stylesheet" href="styles.css?v=rules-20261008-2" />
   </head>
   <body>
     <div class="app-shell">
@@ -60,6 +60,7 @@
               <span id="zoneCount" class="count-badge">0 区</span>
               <button id="locationRulesDesktop" class="icon-button rules-button" type="button" aria-label="查看位置规则" title="查看位置规则">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.8 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg>
+                <span>位置规则</span>
               </button>
             </div>
           </div>
@@ -194,12 +195,12 @@
       </form>
     </dialog>
 
-    <dialog id="locationRulesDialog" class="location-rules-dialog">
+    <dialog id="locationRulesDialog" class="location-rules-dialog" aria-labelledby="locationRulesTitle">
       <div class="rules-card">
         <div class="dialog-header">
           <div>
             <p class="eyebrow" data-i18n="locationRulesEyebrow">LOCATION RULES</p>
-            <h2 data-i18n="locationRulesTitle">位置规则</h2>
+            <h2 id="locationRulesTitle" data-i18n="locationRulesTitle">位置规则</h2>
           </div>
           <button type="button" id="closeLocationRules" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
         </div>
@@ -210,6 +211,6 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="supabase-browser.js?v=20261008"></script>
     <script src="supabase-config.js?v=20261008"></script>
-    <script src="app.js?v=rules-20261008"></script>
+    <script src="app.js?v=rules-20261008-2"></script>
   </body>
 </html>

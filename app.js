@@ -14,31 +14,31 @@ const ZONE_COPY = {
 
 const LOCATION_RULES = {
   zh: {
-    eyebrow: 'LOCATION RULES', title: '位置规则', open: '查看位置规则', close: '关闭',
+    eyebrow: 'LOCATION RULES', title: '位置规则', button: '位置规则', open: '查看位置规则', close: '关闭',
     intro: '按颜色、楼层、货架排数和楼梯口前后快速定位。',
     floors: [
       { title: '一楼', rows: [['A', '红色区域'], ['B', '黄色区域'], ['C', '绿色区域'], ['D', '蓝色区域'], ['E', '紫色区域']] },
-      { title: '二楼', rows: [['F', '楼梯边货架'], ['G', '二楼地板上的区域'], ['H1', '小阁楼左侧的货架'], ['H2', '小阁楼右侧的货架'], ['J1', '最左排，从起点到三楼楼梯'], ['J2', '后排，从三楼楼梯到最后端'], ['K1', '第二排，从起点到三楼楼梯'], ['K2', '第二排后段，从三楼楼梯到最后端'], ['L1 / L2', '第三排货架的前段 / 后段'], ['M1 / M2', '第四排货架的前段 / 后段']] },
+      { title: '二楼', rows: [['F', '楼梯边货架'], ['G', '二楼地板上的区域'], ['H1', '二楼左边小阁楼内左侧的货架'], ['H2', '同一小阁楼内右侧的货架'], ['J1', '最左排，从起点到三楼楼梯'], ['J2', '最左排后段，从三楼楼梯到最后端'], ['K1', '第二排，从起点到三楼楼梯'], ['K2', '第二排后段，从三楼楼梯到最后端'], ['L1 / L2', '第三排货架的前段 / 后段'], ['M1 / M2', '第四排货架的前段 / 后段']] },
       { title: '三楼', rows: [['W1 / W2', 'W 排货架的前段 / 后段'], ['X1 / X2', 'X 排货架的前段 / 后段'], ['Y1 / Y2', 'Y 排货架的前段 / 后段'], ['Z1 / Z2', 'Z 排货架的前段 / 后段']] }
     ],
     note: '编号以 1 结尾的区域位于三楼楼梯口前面；以 2 结尾的区域位于三楼楼梯口后面。'
   },
   kk: {
-    eyebrow: 'ОРНАЛАСУ ЕРЕЖЕЛЕРІ', title: 'Орналасу ережелері', open: 'Орналасу ережелерін көру', close: 'Жабу',
+    eyebrow: 'ОРНАЛАСУ ЕРЕЖЕЛЕРІ', title: 'Орналасу ережелері', button: 'Ережелер', open: 'Орналасу ережелерін көру', close: 'Жабу',
     intro: 'Тауар орнын түсі, қабаты, сөре қатары және баспалдаққа қатысты орны бойынша табыңыз.',
     floors: [
       { title: '1-қабат', rows: [['A', 'Қызыл аймақ'], ['B', 'Сары аймақ'], ['C', 'Жасыл аймақ'], ['D', 'Көк аймақ'], ['E', 'Күлгін аймақ']] },
-      { title: '2-қабат', rows: [['F', 'Баспалдақ жанындағы сөре'], ['G', 'Едендегі аймақ'], ['H1', 'Шағын галереяның сол жағындағы сөре'], ['H2', 'Шағын галереяның оң жағындағы сөре'], ['J1', 'Сол жақ қатар, басталған жерден 3-қабат баспалдағына дейін'], ['J2', 'Артқы қатар, баспалдақтан соңғы шетке дейін'], ['K1', 'Екінші қатар, басталған жерден баспалдаққа дейін'], ['K2', 'Екінші қатардың артқы бөлігі'], ['L1 / L2', 'Үшінші қатардың алдыңғы / артқы бөлігі'], ['M1 / M2', 'Төртінші қатардың алдыңғы / артқы бөлігі']] },
+      { title: '2-қабат', rows: [['F', 'Баспалдақ жанындағы сөре'], ['G', 'Едендегі аймақ'], ['H1', '2-қабаттың сол жағындағы шағын аралық қабат ішіндегі сол жақ сөре'], ['H2', 'Сол аралық қабат ішіндегі оң жақ сөре'], ['J1', 'Ең сол жақ қатар, басталған жерден 3-қабат баспалдағына дейін'], ['J2', 'Ең сол жақ қатардың артқы бөлігі, 3-қабат баспалдағы тұсынан соңғы шетке дейін'], ['K1', 'Екінші қатар, басталған жерден 3-қабат баспалдағына дейін'], ['K2', 'Екінші қатардың артқы бөлігі, 3-қабат баспалдағы тұсынан соңғы шетке дейін'], ['L1 / L2', 'Үшінші қатардың алдыңғы / артқы бөлігі'], ['M1 / M2', 'Төртінші қатардың алдыңғы / артқы бөлігі']] },
       { title: '3-қабат', rows: [['W1 / W2', 'W қатарының алдыңғы / артқы бөлігі'], ['X1 / X2', 'X қатарының алдыңғы / артқы бөлігі'], ['Y1 / Y2', 'Y қатарының алдыңғы / артқы бөлігі'], ['Z1 / Z2', 'Z қатарының алдыңғы / артқы бөлігі']] }
     ],
     note: '1-мен аяқталатын аймақтар 3-қабат баспалдағының алдында, 2-мен аяқталатын аймақтар баспалдақтан кейін орналасады.'
   },
   ru: {
-    eyebrow: 'ПРАВИЛА РАЗМЕЩЕНИЯ', title: 'Правила размещения', open: 'Открыть правила размещения', close: 'Закрыть',
+    eyebrow: 'ПРАВИЛА РАЗМЕЩЕНИЯ', title: 'Правила размещения', button: 'Правила', open: 'Открыть правила размещения', close: 'Закрыть',
     intro: 'Находите товар по цвету, этажу, ряду стеллажей и стороне относительно лестницы.',
     floors: [
       { title: '1 этаж', rows: [['A', 'Красная зона'], ['B', 'Жёлтая зона'], ['C', 'Зелёная зона'], ['D', 'Синяя зона'], ['E', 'Фиолетовая зона']] },
-      { title: '2 этаж', rows: [['F', 'Стеллаж у лестницы'], ['G', 'Зона на полу второго этажа'], ['H1', 'Стеллаж слева от маленькой галереи'], ['H2', 'Стеллаж справа от маленькой галереи'], ['J1', 'Крайний левый ряд, от начала до лестницы на 3 этаж'], ['J2', 'Задний ряд, от лестницы до дальнего края'], ['K1', 'Второй ряд, от начала до лестницы на 3 этаж'], ['K2', 'Задняя часть второго ряда'], ['L1 / L2', 'Передняя / задняя часть третьего ряда'], ['M1 / M2', 'Передняя / задняя часть четвёртого ряда']] },
+      { title: '2 этаж', rows: [['F', 'Стеллаж у лестницы'], ['G', 'Зона на полу второго этажа'], ['H1', 'Левый стеллаж внутри небольшой антресоли в левой части второго этажа'], ['H2', 'Правый стеллаж внутри той же антресоли'], ['J1', 'Крайний левый ряд, от начала до лестницы на 3 этаж'], ['J2', 'Задняя часть крайнего левого ряда, от лестницы на 3 этаж до дальнего края'], ['K1', 'Второй ряд, от начала до лестницы на 3 этаж'], ['K2', 'Задняя часть второго ряда, от лестницы на 3 этаж до дальнего края'], ['L1 / L2', 'Передняя / задняя часть третьего ряда'], ['M1 / M2', 'Передняя / задняя часть четвёртого ряда']] },
       { title: '3 этаж', rows: [['W1 / W2', 'Передняя / задняя часть ряда W'], ['X1 / X2', 'Передняя / задняя часть ряда X'], ['Y1 / Y2', 'Передняя / задняя часть ряда Y'], ['Z1 / Z2', 'Передняя / задняя часть ряда Z']] }
     ],
     note: 'Зоны с окончанием 1 находятся перед лестницей на 3 этаж, а зоны с окончанием 2 — за лестницей.'
@@ -107,7 +107,6 @@ function t(key, params = {}) {
 
 function renderLocationRules() {
   const copy = LOCATION_RULES[state.language] || LOCATION_RULES.zh;
-  const dialog = $('#locationRulesDialog');
   const content = $('#locationRulesContent');
   if (!content) return;
   content.innerHTML = `<p class="rules-intro">${escapeHTML(copy.intro)}</p>${copy.floors.map((floor) => `<section class="rules-floor"><h3>${escapeHTML(floor.title)}</h3><div class="rules-list">${floor.rows.map(([code, description]) => `<div class="rule-row"><strong>${escapeHTML(code)}</strong><span>${escapeHTML(description)}</span></div>`).join('')}</div></section>`).join('')}<p class="rules-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.8 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(copy.note)}</span></p>`;
@@ -115,8 +114,8 @@ function renderLocationRules() {
   $('[data-i18n="locationRulesTitle"]').textContent = copy.title;
   $('#locationRulesDesktop')?.setAttribute('aria-label', copy.open);
   $('#locationRulesDesktop')?.setAttribute('title', copy.open);
+  $('#locationRulesDesktop span').textContent = copy.button;
   $('#closeLocationRules')?.setAttribute('aria-label', copy.close);
-  if (dialog?.open) dialog.querySelector('.rules-card')?.focus?.();
 }
 
 function floorLabel(floor) {
@@ -358,8 +357,8 @@ function renderNavigation() {
 
 function renderMobileFloorBar() {
   const rules = LOCATION_RULES[state.language] || LOCATION_RULES.zh;
-  $('#mobileFloorBar').innerHTML = `${Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('')}<button class="mobile-floor-button mobile-rules-button" data-open-rules="true" aria-label="${escapeHTML(rules.open)}" title="${escapeHTML(rules.open)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.5 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(rules.title)}</span></button>`;
-  $$('.mobile-floor-button').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.mobileFloor)));
+  $('#mobileFloorBar').innerHTML = `<div class="mobile-floor-options">${Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('')}</div><button type="button" class="mobile-floor-button mobile-rules-button" data-open-rules="true" aria-label="${escapeHTML(rules.open)}" title="${escapeHTML(rules.open)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.5 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(rules.button)}</span></button>`;
+  $('[data-mobile-floor]').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.mobileFloor)));
   $('[data-open-rules]')?.addEventListener('click', openLocationRules);
 }
 
