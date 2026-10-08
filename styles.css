@@ -70,6 +70,9 @@ svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-wi
 .workspace { display: grid; grid-template-columns: 226px minmax(0, 1fr) 260px; gap: 0; max-width: 1600px; margin: 0 auto; }
 .sidebar { min-height: calc(100vh - 82px); border-right: 1px solid var(--line); padding: 35px 19px 24px 28px; display: flex; flex-direction: column; }
 .sidebar-heading { display: flex; align-items: flex-start; justify-content: space-between; padding: 0 4px 21px; }
+.sidebar-heading-actions { display: flex; align-items: center; gap: 7px; }
+.rules-button { width: 30px; height: 30px; border: 1px solid var(--line); background: rgba(255,255,255,.65); color: var(--ink-soft); }
+.rules-button:hover { border-color: #b8c4bf; background: var(--white); }
 .sidebar h2 { margin: 6px 0 0; font-size: 18px; letter-spacing: -.04em; }
 .count-badge { margin-top: 19px; padding: 4px 7px; border-radius: 6px; background: var(--yellow-soft); color: #92701c; font-family: "DM Mono", monospace; font-size: 10px; }
 .floor-nav { display: flex; flex-direction: column; gap: 22px; }
@@ -188,6 +191,19 @@ svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-wi
 
 .product-dialog { border: 0; padding: 0; background: transparent; width: min(570px, calc(100% - 30px)); max-height: calc(100% - 30px); color: var(--ink); }
 .product-dialog::backdrop { background: rgba(17,34,49,.44); backdrop-filter: blur(4px); }
+.location-rules-dialog { border: 0; padding: 0; background: transparent; width: min(620px, calc(100% - 30px)); max-height: calc(100% - 30px); color: var(--ink); }
+.location-rules-dialog::backdrop { background: rgba(17,34,49,.44); backdrop-filter: blur(4px); }
+.rules-card { max-height: calc(100vh - 30px); overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: var(--paper); box-shadow: 0 25px 80px rgba(17,34,49,.24); }
+.rules-body { overflow-y: auto; max-height: calc(100vh - 150px); padding: 20px 26px 25px; }
+.rules-intro { margin: 0 0 18px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.rules-floor { margin-top: 18px; }
+.rules-floor h3 { margin: 0 0 8px; font-size: 14px; letter-spacing: -.03em; }
+.rules-list { border-top: 1px solid var(--line); }
+.rule-row { display: grid; grid-template-columns: 75px minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 11px; line-height: 1.55; }
+.rule-row strong { color: var(--coral); font-family: "DM Mono", monospace; font-size: 10px; }
+.rule-row span { color: var(--ink-soft); }
+.rules-note { display: flex; gap: 9px; align-items: flex-start; margin: 20px 0 0; padding: 12px 13px; color: var(--ink-soft); background: rgba(191,231,211,.42); border-radius: 10px; font-size: 11px; line-height: 1.6; }
+.rules-note svg { flex: 0 0 auto; width: 16px; height: 16px; color: #388a68; }
 .dialog-card { max-height: calc(100vh - 30px); display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 17px; overflow: hidden; background: var(--paper); box-shadow: 0 25px 80px rgba(17,34,49,.24); }
 .dialog-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 23px 26px 18px; border-bottom: 1px solid var(--line); background: var(--white); }
 .dialog-header h2 { margin: 6px 0 0; font-size: 22px; letter-spacing: -.055em; }
@@ -241,6 +257,8 @@ svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-wi
   .mobile-floor-bar::-webkit-scrollbar { display: none; }
   .mobile-floor-button { flex: 0 0 auto; border: 1px solid var(--line); background: transparent; border-radius: 7px; padding: 7px 12px; color: var(--muted); font-size: 11px; }
   .mobile-floor-button.active { background: var(--ink); border-color: var(--ink); color: white; }
+  .mobile-rules-button { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-soft); background: var(--white); }
+  .mobile-rules-button svg { width: 14px; height: 14px; color: var(--coral); }
   .workspace { display: block; }
   .sidebar { display: none; }
   .main-content { padding: 30px 16px 50px; }
@@ -260,6 +278,8 @@ svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-wi
   .zone-map::-webkit-scrollbar { display: none; }
   .map-zone { flex: 0 0 auto; }
   .dialog-header, .dialog-body, .dialog-footer { padding-left: 18px; padding-right: 18px; }
+  .rules-body { padding-left: 18px; padding-right: 18px; }
+  .rule-row { grid-template-columns: 65px minmax(0, 1fr); gap: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
