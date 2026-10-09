@@ -40,6 +40,10 @@
           <button id="refreshData" class="icon-button refresh-button" type="button" aria-label="刷新云端数据" title="刷新云端数据">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.8-4L4 9"></path><path d="M4 5v4h4"></path><path d="M4 13a8 8 0 0 0 14.8 4L20 15"></path><path d="M20 19v-4h-4"></path></svg>
           </button>
+          <button id="restockTop" class="restock-top-button" type="button" aria-label="打开补货中心" title="打开补货中心">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg>
+            <span data-i18n="restockCenter">补货中心</span><b id="restockTopCount">0</b>
+          </button>
           <button id="quickAdd" class="primary-button top-add">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
             <span>新增货品</span>
@@ -58,10 +62,6 @@
             </div>
             <div class="sidebar-heading-actions">
               <span id="zoneCount" class="count-badge">0 区</span>
-              <button id="restockOpen" class="restock-nav-button" type="button" aria-label="打开补货中心" title="打开补货中心">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg>
-                <span data-i18n="restockCenter">补货中心</span><b id="restockNavCount">0</b>
-              </button>
               <button id="locationRulesDesktop" class="icon-button rules-button" type="button" aria-label="查看位置规则" title="查看位置规则">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.8 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg>
                 <span>位置规则</span>

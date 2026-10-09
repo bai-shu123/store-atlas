@@ -359,23 +359,21 @@ function renderNavigation() {
   }).join('');
   $('#zoneCount').textContent = `${Object.values(FLOORS).reduce((sum, floor) => sum + floor.zones.length, 0)} ${t('zones')}`;
   const restockCount = state.products.filter((product) => product.stockStatus === 'restock').length;
-  const restockButton = $('#restockOpen');
+  const restockButton = $('#restockTop');
   if (restockButton) {
     restockButton.setAttribute('aria-label', `${t('restockCenter')}，${restockCount} ${t('restockCount')}`);
     restockButton.setAttribute('title', t('restockCenter'));
   }
-  if ($('#restockNavCount')) $('#restockNavCount').textContent = restockCount;
+  if ($('#restockTopCount')) $('#restockTopCount').textContent = restockCount;
   $$('.floor-button').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.floorOnly)));
   $$('.zone-button').forEach((button) => button.addEventListener('click', () => selectZone(button.dataset.floor, button.dataset.zone)));
 }
 
 function renderMobileFloorBar() {
   const rules = LOCATION_RULES[state.language] || LOCATION_RULES.zh;
-  const restockCount = state.products.filter((product) => product.stockStatus === 'restock').length;
-  $('#mobileFloorBar').innerHTML = `<div class="mobile-floor-options">${Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('')}</div><button type="button" class="mobile-floor-button mobile-restock-button" data-open-restock="true" aria-label="${escapeHTML(t('restockCenter'))}" title="${escapeHTML(t('restockCenter'))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg><span>${escapeHTML(t('restockCenter'))}</span><b>${restockCount}</b></button><button type="button" class="mobile-floor-button mobile-rules-button" data-open-rules="true" aria-label="${escapeHTML(rules.open)}" title="${escapeHTML(rules.open)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.5 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(rules.button)}</span></button>`;
+  $('#mobileFloorBar').innerHTML = `<div class="mobile-floor-options">${Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('')}</div><button type="button" class="mobile-floor-button mobile-rules-button" data-open-rules="true" aria-label="${escapeHTML(rules.open)}" title="${escapeHTML(rules.open)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.5 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(rules.button)}</span></button>`;
   $$('[data-mobile-floor]').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.mobileFloor)));
   $('[data-open-rules]')?.addEventListener('click', openLocationRules);
-  $('[data-open-restock]')?.addEventListener('click', openRestockCenter);
 }
 
 function renderHeaderStats() {
@@ -600,7 +598,7 @@ $('#areaAdd').addEventListener('click', openAdd);
 $('#emptyAdd').addEventListener('click', openAdd);
 $('#exportData').addEventListener('click', exportData);
 $('#refreshData').addEventListener('click', handleRefresh);
-$('#restockOpen')?.addEventListener('click', openRestockCenter);
+$('#restockTop')?.addEventListener('click', openRestockCenter);
 function openLocationRules() { renderLocationRules(); $('#locationRulesDialog').showModal(); }
 $('#locationRulesDesktop').addEventListener('click', openLocationRules);
 $('#closeLocationRules').addEventListener('click', () => $('#locationRulesDialog').close());
