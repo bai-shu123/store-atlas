@@ -51,7 +51,7 @@ const TRANSLATIONS = {
   zh: {
     title: '店面货品摆放 · 区域台账', brand: '店面货品摆放', navigate: 'NAVIGATE', areas: '摆放区域', storeMap: 'STORE MAP',
     intro: '按楼层和区域整理陈列信息，现场查找时一眼就能定位。', heroMapLine1: '现场区域', heroMapLine2: '快速定位',
-    floorProducts: '当前楼层货品', refreshData: '刷新云端数据', refreshingData: '正在刷新云端数据…', refreshed: '云端数据已刷新', refreshFailed: '刷新失败，请检查云端连接',
+    floorProducts: '当前楼层货品', restockCenter: '补货中心', restockCenterTitle: '需要补货', restockCenterIntro: '集中处理需要补货的货品，完成后可直接更新状态。', restockCount: '件待补货', restockEmpty: '暂无需要补货的货品', markRestocked: '已补货', restocked: '已标记为充裕', restockFailed: '补货状态同步失败，已保留本地修改', refreshData: '刷新云端数据', refreshingData: '正在刷新云端数据…', refreshed: '云端数据已刷新', refreshFailed: '刷新失败，请检查云端连接',
     currentZone: 'CURRENT ZONE', export: '导出', addToZone: '添加到本区', emptyTitle: '这个区域还没有货品', emptyCopy: '把第一件货品放进这里，建立你的店面地图。', emptyAdd: '添加第一件货品',
     zoneNote: 'ZONE NOTE', floorLayout: '楼层布局', tip: '小提示：上传实拍图后，现场同事能更快确认货品与位置。', productImage: '货品图片', imageHint: '建议上传清晰的正面或货架实拍图', chooseImage: '选择图片', removeImage: '移除图片',
     productNumber: '货品编号 <i>*</i>', productType: '货品类型 <i>*</i>', productPrice: '货品价格（选填）', productFloor: '所在楼层 <i>*</i>', productZone: '所在区域 <i>*</i>', stockStatus: '货品数量状态', stockAmple: '充裕', stockNormal: '一般', stockRestock: '需要补货', pricePrefix: '价格', details: '细节说明', cancel: '取消',
@@ -67,7 +67,7 @@ const TRANSLATIONS = {
   kk: {
     title: 'Дүкен тауарлары · Аймақтар тізімі', brand: 'Дүкен тауарлары', navigate: 'БАҒЫТ', areas: 'Орналастыру аймақтары', storeMap: 'ДҮКЕН КАРТАСЫ',
     intro: 'Тауарларды қабаттар мен аймақтар бойынша реттеңіз — қажетті орынды бірден табыңыз.', heroMapLine1: 'Дүкен аймағы', heroMapLine2: 'Жылдам табу',
-    floorProducts: 'Осы қабаттағы тауар', refreshData: 'Бұлттағы деректерді жаңарту', refreshingData: 'Бұлттағы деректер жаңартылуда…', refreshed: 'Бұлттағы деректер жаңартылды', refreshFailed: 'Жаңарту сәтсіз, бұлт байланысын тексеріңіз',
+    floorProducts: 'Осы қабаттағы тауар', restockCenter: 'Толықтыру орталығы', restockCenterTitle: 'Толықтыру қажет', restockCenterIntro: 'Толықтыруды қажет ететін тауарларды бір жерден өңдеп, күйін бірден жаңартыңыз.', restockCount: 'тауар толықтыруды күтуде', restockEmpty: 'Толықтыруды қажет ететін тауар жоқ', markRestocked: 'Толықтырылды', restocked: 'Тауар жеткілікті деп белгіленді', restockFailed: 'Толықтыру күйін синхрондау сәтсіз, жергілікті өзгеріс сақталды', refreshData: 'Бұлттағы деректерді жаңарту', refreshingData: 'Бұлттағы деректер жаңартылуда…', refreshed: 'Бұлттағы деректер жаңартылды', refreshFailed: 'Жаңарту сәтсіз, бұлт байланысын тексеріңіз',
     currentZone: 'ҚАЗІРГІ АЙМАҚ', export: 'Экспорт', addToZone: 'Осы аймаққа қосу', emptyTitle: 'Бұл аймақта тауар жоқ', emptyCopy: 'Дүкен картаңызды құру үшін алғашқы тауарды қосыңыз.', emptyAdd: 'Алғашқы тауарды қосу',
     zoneNote: 'АЙМАҚ ЕСКЕРТПЕСІ', floorLayout: 'Қабат жоспары', tip: 'Кеңес: нақты сурет қосылса, қызметкерлер тауар орнын тезірек табады.', productImage: 'Тауар суреті', imageHint: 'Алдыңғы немесе сөре суретін анық етіп жүктеңіз', chooseImage: 'Сурет таңдау', removeImage: 'Суретті өшіру',
     productNumber: 'Тауар нөмірі <i>*</i>', productType: 'Тауар түрі <i>*</i>', productPrice: 'Тауар бағасы (міндетті емес)', productFloor: 'Қабат <i>*</i>', productZone: 'Аймақ <i>*</i>', stockStatus: 'Тауар санының күйі', stockAmple: 'Жеткілікті', stockNormal: 'Қалыпты', stockRestock: 'Толықтыру қажет', pricePrefix: 'Бағасы', details: 'Толық сипаттама', cancel: 'Бас тарту',
@@ -83,7 +83,7 @@ const TRANSLATIONS = {
   ru: {
     title: 'Раскладка магазина · Карта зон', brand: 'Раскладка магазина', navigate: 'НАВИГАЦИЯ', areas: 'Зоны размещения', storeMap: 'КАРТА МАГАЗИНА',
     intro: 'Организуйте выкладку по этажам и зонам, чтобы сразу находить нужное место.', heroMapLine1: 'Зона магазина', heroMapLine2: 'Быстрый поиск',
-    floorProducts: 'Товары на этаже', refreshData: 'Обновить облачные данные', refreshingData: 'Обновление облачных данных…', refreshed: 'Облачные данные обновлены', refreshFailed: 'Не удалось обновить, проверьте облачное соединение',
+    floorProducts: 'Товары на этаже', restockCenter: 'Центр пополнения', restockCenterTitle: 'Нужно пополнить', restockCenterIntro: 'Список товаров для пополнения: обновляйте статус сразу после пополнения.', restockCount: 'товаров к пополнению', restockEmpty: 'Нет товаров, требующих пополнения', markRestocked: 'Пополнено', restocked: 'Товар отмечен как доступный', restockFailed: 'Не удалось синхронизировать статус пополнения, локальные изменения сохранены', refreshData: 'Обновить облачные данные', refreshingData: 'Обновление облачных данных…', refreshed: 'Облачные данные обновлены', refreshFailed: 'Не удалось обновить, проверьте облачное соединение',
     currentZone: 'ТЕКУЩАЯ ЗОНА', export: 'Экспорт', addToZone: 'Добавить в зону', emptyTitle: 'В этой зоне пока нет товаров', emptyCopy: 'Добавьте первый товар и создайте карту магазина.', emptyAdd: 'Добавить первый товар',
     zoneNote: 'ЗАМЕТКА ЗОНЫ', floorLayout: 'План этажа', tip: 'Совет: реальное фото поможет сотрудникам быстрее найти товар и его место.', productImage: 'Фото товара', imageHint: 'Загрузите чёткое фото товара или полки', chooseImage: 'Выбрать фото', removeImage: 'Удалить фото',
     productNumber: 'Артикул <i>*</i>', productType: 'Тип товара <i>*</i>', productPrice: 'Цена товара (необязательно)', productFloor: 'Этаж <i>*</i>', productZone: 'Зона <i>*</i>', stockStatus: 'Состояние количества', stockAmple: 'В наличии', stockNormal: 'Норма', stockRestock: 'Нужно пополнить', pricePrefix: 'Цена', details: 'Описание', cancel: 'Отмена',
@@ -346,6 +346,7 @@ function renderAll() {
   renderHeaderStats();
   renderArea();
   renderInspector();
+  renderRestockCenter();
   renderSearchResults();
 }
 
@@ -357,15 +358,24 @@ function renderNavigation() {
     return `<div class="floor-group"><button class="floor-button ${state.floor === floor ? 'active' : ''}" data-floor-only="${floor}"><span class="floor-label"><span class="floor-number">0${floorIndex + 1}</span>${floorLabel(floor)}</span><span class="floor-total">${total} ${t('pieces')}</span></button><div class="zone-list">${zones}</div></div>`;
   }).join('');
   $('#zoneCount').textContent = `${Object.values(FLOORS).reduce((sum, floor) => sum + floor.zones.length, 0)} ${t('zones')}`;
+  const restockCount = state.products.filter((product) => product.stockStatus === 'restock').length;
+  const restockButton = $('#restockOpen');
+  if (restockButton) {
+    restockButton.setAttribute('aria-label', `${t('restockCenter')}，${restockCount} ${t('restockCount')}`);
+    restockButton.setAttribute('title', t('restockCenter'));
+  }
+  if ($('#restockNavCount')) $('#restockNavCount').textContent = restockCount;
   $$('.floor-button').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.floorOnly)));
   $$('.zone-button').forEach((button) => button.addEventListener('click', () => selectZone(button.dataset.floor, button.dataset.zone)));
 }
 
 function renderMobileFloorBar() {
   const rules = LOCATION_RULES[state.language] || LOCATION_RULES.zh;
-  $('#mobileFloorBar').innerHTML = `<div class="mobile-floor-options">${Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('')}</div><button type="button" class="mobile-floor-button mobile-rules-button" data-open-rules="true" aria-label="${escapeHTML(rules.open)}" title="${escapeHTML(rules.open)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.5 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(rules.button)}</span></button>`;
+  const restockCount = state.products.filter((product) => product.stockStatus === 'restock').length;
+  $('#mobileFloorBar').innerHTML = `<div class="mobile-floor-options">${Object.entries(FLOORS).map(([floor]) => `<button class="mobile-floor-button ${state.floor === floor ? 'active' : ''}" data-mobile-floor="${floor}">${floorLabel(floor)} <span>${floorProducts(floor).length}</span></button>`).join('')}</div><button type="button" class="mobile-floor-button mobile-restock-button" data-open-restock="true" aria-label="${escapeHTML(t('restockCenter'))}" title="${escapeHTML(t('restockCenter'))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg><span>${escapeHTML(t('restockCenter'))}</span><b>${restockCount}</b></button><button type="button" class="mobile-floor-button mobile-rules-button" data-open-rules="true" aria-label="${escapeHTML(rules.open)}" title="${escapeHTML(rules.open)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.5 7.5 9.5 4.4-1.7 7.5-4.9 7.5-9.5V6L12 3Z"></path><path d="M12 8v4M12 15h.01"></path></svg><span>${escapeHTML(rules.button)}</span></button>`;
   $$('[data-mobile-floor]').forEach((button) => button.addEventListener('click', () => selectFloor(button.dataset.mobileFloor)));
   $('[data-open-rules]')?.addEventListener('click', openLocationRules);
+  $('[data-open-restock]')?.addEventListener('click', openRestockCenter);
 }
 
 function renderHeaderStats() {
@@ -388,6 +398,54 @@ function renderArea() {
   $('#emptyState').hidden = products.length > 0;
   $$('.edit-product').forEach((button) => button.addEventListener('click', () => openEdit(button.dataset.id)));
   $$('.delete-product').forEach((button) => button.addEventListener('click', () => deleteProduct(button.dataset.id)));
+}
+
+function restockCard(product) {
+  const image = product.image ? `<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.number)}" />` : `<span class="placeholder-mark">${escapeHTML(product.zone)}</span>`;
+  const location = state.language === 'zh' ? `${product.floor} / ${product.zone}` : `${floorShortLabel(product.floor)} / ${product.zone}`;
+  const details = product.details || t('noDetails');
+  const price = product.price !== '' && product.price !== null && product.price !== undefined ? `<span class="restock-price">${escapeHTML(t('pricePrefix'))} ${escapeHTML(product.price)}</span>` : '';
+  return `<article class="restock-item"><div class="restock-item-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="restock-item-main"><div class="restock-item-top"><span class="product-location">${escapeHTML(location)}</span><span class="stock-badge stock-restock"><span class="stock-badge-dot" aria-hidden="true"></span>${escapeHTML(t('stockRestock'))}</span></div><div class="restock-item-heading"><h3>${escapeHTML(product.number)}</h3>${price}</div><p class="restock-item-type">${escapeHTML(product.type)}</p><p class="restock-item-details">${escapeHTML(details)}</p><div class="restock-item-footer"><span class="restock-item-date">${formatDate(product.updatedAt)}</span><div class="restock-item-actions"><button type="button" class="secondary-button restock-edit" data-id="${escapeHTML(product.id)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0 3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg><span>${escapeHTML(t('editProduct'))}</span></button><button type="button" class="primary-button restock-done" data-id="${escapeHTML(product.id)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg><span>${escapeHTML(t('markRestocked'))}</span></button></div></div></div></article>`;
+}
+
+function renderRestockCenter() {
+  const restockProducts = state.products.filter((product) => product.stockStatus === 'restock');
+  const content = $('#restockContent');
+  if (!content) return;
+  content.innerHTML = restockProducts.length
+    ? `<div class="restock-summary"><strong>${restockProducts.length}</strong><span>${escapeHTML(t('restockCount'))}</span></div><div class="restock-list">${restockProducts.map(restockCard).join('')}</div>`
+    : `<div class="restock-empty"><div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg></div><h3>${escapeHTML(t('restockEmpty'))}</h3><p>${escapeHTML(t('restockCenterIntro'))}</p></div>`;
+  $$('.restock-edit').forEach((button) => button.addEventListener('click', () => openEdit(button.dataset.id)));
+  $$('.restock-done').forEach((button) => button.addEventListener('click', () => markProductRestocked(button.dataset.id)));
+}
+
+function openRestockCenter() {
+  renderRestockCenter();
+  $('#restockDialog')?.showModal();
+}
+
+async function markProductRestocked(id) {
+  const product = state.products.find((item) => item.id === id);
+  if (!product || product.stockStatus !== 'restock') return;
+  const updatedProduct = { ...product, stockStatus: 'ample', updatedAt: new Date().toISOString() };
+  state.products = state.products.map((item) => item.id === id ? updatedProduct : item);
+  saveProducts();
+  renderAll();
+  showToast(state.remoteEnabled ? t('savedSyncing') : t('restocked'));
+  if (!state.remoteEnabled) return;
+  try {
+    setSyncStatus(t('syncing'), 'busy');
+    const syncedProduct = await upsertRemoteProduct(updatedProduct);
+    state.products = state.products.map((item) => item.id === syncedProduct.id ? syncedProduct : item);
+    saveProducts();
+    setSyncStatus(t('cloudSynced'));
+    renderAll();
+    showToast(t('restocked'));
+  } catch (error) {
+    console.error('Supabase restock update failed', error);
+    setSyncStatus(t('connectionFail'), 'error');
+    showToast(t('restockFailed'));
+  }
 }
 
 function productCard(product) {
@@ -542,10 +600,13 @@ $('#areaAdd').addEventListener('click', openAdd);
 $('#emptyAdd').addEventListener('click', openAdd);
 $('#exportData').addEventListener('click', exportData);
 $('#refreshData').addEventListener('click', handleRefresh);
+$('#restockOpen')?.addEventListener('click', openRestockCenter);
 function openLocationRules() { renderLocationRules(); $('#locationRulesDialog').showModal(); }
 $('#locationRulesDesktop').addEventListener('click', openLocationRules);
 $('#closeLocationRules').addEventListener('click', () => $('#locationRulesDialog').close());
 $('#locationRulesDialog').addEventListener('click', (event) => { if (event.target === $('#locationRulesDialog')) $('#locationRulesDialog').close(); });
+$('#closeRestock')?.addEventListener('click', () => $('#restockDialog').close());
+$('#restockDialog')?.addEventListener('click', (event) => { if (event.target === $('#restockDialog')) $('#restockDialog').close(); });
 $('#closeDialog').addEventListener('click', () => $('#productDialog').close());
 $('#cancelDialog').addEventListener('click', () => $('#productDialog').close());
 $('#productDialog').addEventListener('click', (event) => { if (event.target === $('#productDialog')) $('#productDialog').close(); });
