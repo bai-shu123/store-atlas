@@ -149,7 +149,7 @@ function applyLanguage() {
   $('#imagePreview span')?.replaceChildren(document.createTextNode(t('noImage')));
   $('#productDetails').placeholder = state.language === 'zh' ? '记录颜色、规格、陈列要求或补货备注…' : state.language === 'ru' ? 'Цвет, размер, требования к выкладке или заметки…' : 'Түсі, өлшемі, орналастыру талабы немесе толықтыру ескертпесі…';
   $('#productPrice').placeholder = state.language === 'zh' ? '例如：99.00' : state.language === 'ru' ? 'Например: 99.00' : 'Мысалы: 99.00';
-  if ($('#productDialog')?.open) fillFloorOptions($('#productFloor').value || state.floor, $('#productZone').value || state.zone);
+  if ($('#productFloor')) fillFloorOptions($('#productFloor').value || state.floor, $('#productZone').value || state.zone);
 }
 const STORE_ATLAS_CONFIG = window.STORE_ATLAS_CONFIG || {};
 let remoteClient = null;
