@@ -12,6 +12,12 @@ create table if not exists public.products (
   updated_at timestamptz not null default now()
 );
 
+alter table public.products add column if not exists price numeric(12, 2);
+alter table public.products add column if not exists stock_status text not null default 'ample';
+update public.products set stock_status = 'ample' where stock_status is null or stock_status not in ('ample', 'normal', 'restock');
+alter table public.products drop constraint if exists products_stock_status_check;
+alter table public.products add constraint products_stock_status_check check (stock_status in ('ample', 'normal', 'restock'));
+
 alter table public.products enable row level security;
 
 drop policy if exists "Public can read products" on public.products;

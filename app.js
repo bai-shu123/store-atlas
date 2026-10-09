@@ -54,7 +54,7 @@ const TRANSLATIONS = {
     floorProducts: '当前楼层货品', refreshData: '刷新云端数据', refreshingData: '正在刷新云端数据…', refreshed: '云端数据已刷新', refreshFailed: '刷新失败，请检查云端连接',
     currentZone: 'CURRENT ZONE', export: '导出', addToZone: '添加到本区', emptyTitle: '这个区域还没有货品', emptyCopy: '把第一件货品放进这里，建立你的店面地图。', emptyAdd: '添加第一件货品',
     zoneNote: 'ZONE NOTE', floorLayout: '楼层布局', tip: '小提示：上传实拍图后，现场同事能更快确认货品与位置。', productImage: '货品图片', imageHint: '建议上传清晰的正面或货架实拍图', chooseImage: '选择图片', removeImage: '移除图片',
-    productNumber: '货品编号 <i>*</i>', productType: '货品类型 <i>*</i>', productFloor: '所在楼层 <i>*</i>', productZone: '所在区域 <i>*</i>', details: '细节说明', cancel: '取消',
+    productNumber: '货品编号 <i>*</i>', productType: '货品类型 <i>*</i>', productPrice: '货品价格（选填）', productFloor: '所在楼层 <i>*</i>', productZone: '所在区域 <i>*</i>', stockStatus: '货品数量状态', stockAmple: '充裕', stockNormal: '一般', stockRestock: '需要补货', pricePrefix: '价格', details: '细节说明', cancel: '取消',
     addProduct: '添加货品', editProduct: '编辑货品', saveProduct: '保存货品', saveChanges: '保存修改', searchPlaceholder: '搜索货品编号、类型或区域…',
     localSaved: '本地已保存', localMode: '本地模式', cloudSynced: '云端已同步', syncing: '正在同步…', connecting: '正在连接云端…', connectionFail: '云端连接失败',
     pieces: '件', registered: '件已登记', toOrganize: '件待整理', zones: '个区域', noImage: '暂无图片', noDetails: '暂无细节说明', justUpdated: '刚刚更新', updated: '更新',
@@ -70,7 +70,7 @@ const TRANSLATIONS = {
     floorProducts: 'Осы қабаттағы тауар', refreshData: 'Бұлттағы деректерді жаңарту', refreshingData: 'Бұлттағы деректер жаңартылуда…', refreshed: 'Бұлттағы деректер жаңартылды', refreshFailed: 'Жаңарту сәтсіз, бұлт байланысын тексеріңіз',
     currentZone: 'ҚАЗІРГІ АЙМАҚ', export: 'Экспорт', addToZone: 'Осы аймаққа қосу', emptyTitle: 'Бұл аймақта тауар жоқ', emptyCopy: 'Дүкен картаңызды құру үшін алғашқы тауарды қосыңыз.', emptyAdd: 'Алғашқы тауарды қосу',
     zoneNote: 'АЙМАҚ ЕСКЕРТПЕСІ', floorLayout: 'Қабат жоспары', tip: 'Кеңес: нақты сурет қосылса, қызметкерлер тауар орнын тезірек табады.', productImage: 'Тауар суреті', imageHint: 'Алдыңғы немесе сөре суретін анық етіп жүктеңіз', chooseImage: 'Сурет таңдау', removeImage: 'Суретті өшіру',
-    productNumber: 'Тауар нөмірі <i>*</i>', productType: 'Тауар түрі <i>*</i>', productFloor: 'Қабат <i>*</i>', productZone: 'Аймақ <i>*</i>', details: 'Толық сипаттама', cancel: 'Бас тарту',
+    productNumber: 'Тауар нөмірі <i>*</i>', productType: 'Тауар түрі <i>*</i>', productPrice: 'Тауар бағасы (міндетті емес)', productFloor: 'Қабат <i>*</i>', productZone: 'Аймақ <i>*</i>', stockStatus: 'Тауар санының күйі', stockAmple: 'Жеткілікті', stockNormal: 'Қалыпты', stockRestock: 'Толықтыру қажет', pricePrefix: 'Бағасы', details: 'Толық сипаттама', cancel: 'Бас тарту',
     addProduct: 'Тауар қосу', editProduct: 'Тауарды өңдеу', saveProduct: 'Тауарды сақтау', saveChanges: 'Өзгерістерді сақтау', searchPlaceholder: 'Нөмір, түр немесе аймақ бойынша іздеу…',
     localSaved: 'Жергілікті сақталды', localMode: 'Жергілікті режим', cloudSynced: 'Бұлтпен синхрондалды', syncing: 'Синхрондалуда…', connecting: 'Бұлтқа қосылуда…', connectionFail: 'Бұлтқа қосылу сәтсіз',
     pieces: 'дана', registered: 'дана тіркелді', toOrganize: 'дана реттелуде', zones: 'аймақ', noImage: 'Сурет жоқ', noDetails: 'Сипаттама жоқ', justUpdated: 'Жаңа ғана жаңартылды', updated: 'жаңартылды',
@@ -86,7 +86,7 @@ const TRANSLATIONS = {
     floorProducts: 'Товары на этаже', refreshData: 'Обновить облачные данные', refreshingData: 'Обновление облачных данных…', refreshed: 'Облачные данные обновлены', refreshFailed: 'Не удалось обновить, проверьте облачное соединение',
     currentZone: 'ТЕКУЩАЯ ЗОНА', export: 'Экспорт', addToZone: 'Добавить в зону', emptyTitle: 'В этой зоне пока нет товаров', emptyCopy: 'Добавьте первый товар и создайте карту магазина.', emptyAdd: 'Добавить первый товар',
     zoneNote: 'ЗАМЕТКА ЗОНЫ', floorLayout: 'План этажа', tip: 'Совет: реальное фото поможет сотрудникам быстрее найти товар и его место.', productImage: 'Фото товара', imageHint: 'Загрузите чёткое фото товара или полки', chooseImage: 'Выбрать фото', removeImage: 'Удалить фото',
-    productNumber: 'Артикул <i>*</i>', productType: 'Тип товара <i>*</i>', productFloor: 'Этаж <i>*</i>', productZone: 'Зона <i>*</i>', details: 'Описание', cancel: 'Отмена',
+    productNumber: 'Артикул <i>*</i>', productType: 'Тип товара <i>*</i>', productPrice: 'Цена товара (необязательно)', productFloor: 'Этаж <i>*</i>', productZone: 'Зона <i>*</i>', stockStatus: 'Состояние количества', stockAmple: 'В наличии', stockNormal: 'Обычно', stockRestock: 'Нужно пополнить', pricePrefix: 'Цена', details: 'Описание', cancel: 'Отмена',
     addProduct: 'Добавить товар', editProduct: 'Изменить товар', saveProduct: 'Сохранить товар', saveChanges: 'Сохранить изменения', searchPlaceholder: 'Поиск по артикулу, типу или зоне…',
     localSaved: 'Сохранено локально', localMode: 'Локальный режим', cloudSynced: 'Синхронизировано', syncing: 'Синхронизация…', connecting: 'Подключение к облаку…', connectionFail: 'Ошибка подключения к облаку',
     pieces: 'шт.', registered: 'шт. зарегистрировано', toOrganize: 'шт. на учёте', zones: 'зон', noImage: 'Нет фото', noDetails: 'Нет описания', justUpdated: 'Только что обновлено', updated: 'обновлено',
@@ -176,7 +176,8 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 function loadProducts() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return Array.isArray(stored) ? stored : seedProducts;
+    const products = Array.isArray(stored) ? stored : seedProducts;
+    return products.map((product) => ({ ...product, price: product.price === null || product.price === undefined ? '' : String(product.price), stockStatus: ['ample', 'normal', 'restock'].includes(product.stockStatus) ? product.stockStatus : 'ample' }));
   } catch (error) {
     return seedProducts;
   }
@@ -205,6 +206,8 @@ function fromRemoteProduct(row) {
     id: row.id,
     number: row.number,
     type: row.type,
+    price: row.price === null || row.price === undefined || row.price === '' ? '' : String(row.price),
+    stockStatus: ['ample', 'normal', 'restock'].includes(row.stock_status) ? row.stock_status : 'ample',
     floor: row.floor,
     zone: row.zone,
     details: row.details || '',
@@ -218,6 +221,8 @@ function toRemoteProduct(product) {
     id: product.id,
     number: product.number,
     type: product.type,
+    price: product.price === '' || product.price === null || product.price === undefined ? null : Number(product.price),
+    stock_status: product.stockStatus || 'ample',
     floor: product.floor,
     zone: product.zone,
     details: product.details || '',
@@ -386,7 +391,10 @@ function renderArea() {
 function productCard(product) {
   const image = product.image ? `<img src="${product.image}" alt="${escapeHTML(product.number)}" />` : `<span class="placeholder-mark">${escapeHTML(product.zone)}</span>`;
   const location = state.language === 'zh' ? `${product.floor} / ${product.zone}` : `${floorShortLabel(product.floor)} / ${product.zone}`;
-  return `<article class="product-card"><div class="product-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="product-info"><span class="product-location">${escapeHTML(location)}</span><h3 class="product-number" title="${escapeHTML(product.number)}">${escapeHTML(product.number)}</h3><p class="product-type">${escapeHTML(product.type)}</p><p class="product-details">${escapeHTML(product.details || t('noDetails'))}</p><div class="product-card-footer"><span class="product-date">${formatDate(product.updatedAt)}</span><div class="card-actions"><button class="card-action edit-product" data-id="${product.id}" aria-label="${escapeHTML(t('editProduct'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0-3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg></button><button class="card-action delete delete-product" data-id="${product.id}" aria-label="${escapeHTML(t('delete'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div></div></article>`;
+  const stockStatus = product.stockStatus || 'ample';
+  const stockLabel = t(stockStatus === 'restock' ? 'stockRestock' : stockStatus === 'normal' ? 'stockNormal' : 'stockAmple');
+  const price = product.price !== '' && product.price !== null && product.price !== undefined ? `<span class="product-price">${escapeHTML(t('pricePrefix'))} ${escapeHTML(product.price)}</span>` : '';
+  return `<article class="product-card"><div class="product-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="product-info"><span class="product-location">${escapeHTML(location)}</span><div class="product-heading-row"><h3 class="product-number" title="${escapeHTML(product.number)}">${escapeHTML(product.number)}</h3>${price}</div><p class="product-type">${escapeHTML(product.type)}</p><span class="stock-badge stock-${stockStatus}"><span class="stock-badge-dot" aria-hidden="true"></span>${escapeHTML(stockLabel)}</span><p class="product-details">${escapeHTML(product.details || t('noDetails'))}</p><div class="product-card-footer"><span class="product-date">${formatDate(product.updatedAt)}</span><div class="card-actions"><button class="card-action edit-product" data-id="${product.id}" aria-label="${escapeHTML(t('editProduct'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0 3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg></button><button class="card-action delete delete-product" data-id="${product.id}" aria-label="${escapeHTML(t('delete'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div></div></article>`;
 }
 
 function renderInspector() {
@@ -444,6 +452,8 @@ function openEdit(id) {
   $('#saveProductText').textContent = t('saveChanges');
   $('#productNumber').value = product.number;
   $('#productType').value = product.type;
+  $('#productPrice').value = product.price || '';
+  $(`input[name="stockStatus"][value="${product.stockStatus || 'ample'}"]`).checked = true;
   $('#productDetails').value = product.details || '';
   fillFloorOptions(product.floor, product.zone);
   setImagePreview(product.image || '');
@@ -493,7 +503,7 @@ function renderSearchResults() {
   const query = state.query.trim().toLowerCase();
   const panel = $('#searchResults');
   if (!query) { panel.hidden = true; return; }
-  const results = state.products.filter((product) => [product.number, product.type, product.details, product.zone, product.floor, floorLabel(product.floor)].join(' ').toLowerCase().includes(query)).slice(0, 8);
+  const results = state.products.filter((product) => [product.number, product.type, product.price, product.stockStatus, product.details, product.zone, product.floor, floorLabel(product.floor), t(product.stockStatus === 'restock' ? 'stockRestock' : product.stockStatus === 'normal' ? 'stockNormal' : 'stockAmple')].join(' ').toLowerCase().includes(query)).slice(0, 8);
   panel.innerHTML = results.length ? results.map((product) => `<button class="search-result" data-search-id="${product.id}"><span class="search-result-thumb">${product.image ? `<img src="${product.image}" alt="" />` : escapeHTML(product.zone)}</span><span class="search-result-main"><strong>${escapeHTML(product.number)}</strong><span>${escapeHTML(product.type)} · ${escapeHTML(floorLabel(product.floor))} ${escapeHTML(product.zone)} ${state.language === 'ru' ? 'зона' : state.language === 'kk' ? 'аймағы' : '区'}</span></span></button>`).join('') : `<div class="search-empty">${escapeHTML(t('noResults'))}</div>`;
   panel.hidden = false;
   $$('.search-result').forEach((button) => button.addEventListener('click', () => {
@@ -556,7 +566,7 @@ $('#languageSelect').addEventListener('change', (event) => {
 });
 $('#productForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const product = { number: $('#productNumber').value.trim(), type: $('#productType').value.trim(), floor: $('#productFloor').value, zone: $('#productZone').value, details: $('#productDetails').value.trim(), image: $('#productImage').dataset.value || '', updatedAt: new Date().toISOString() };
+  const product = { number: $('#productNumber').value.trim(), type: $('#productType').value.trim(), price: $('#productPrice').value.trim(), stockStatus: document.querySelector('input[name="stockStatus"]:checked')?.value || 'ample', floor: $('#productFloor').value, zone: $('#productZone').value, details: $('#productDetails').value.trim(), image: $('#productImage').dataset.value || '', updatedAt: new Date().toISOString() };
   if (!product.number || !product.type) return;
   const savedProduct = state.editingId
     ? { ...state.products.find((item) => item.id === state.editingId), ...product }

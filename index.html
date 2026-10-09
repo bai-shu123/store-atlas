@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#112231" />
     <title>店面货品摆放 · 区域台账</title>
-    <link rel="stylesheet" href="styles.css?v=rules-20261008-3" />
+    <link rel="stylesheet" href="styles.css?v=inventory-20261009" />
   </head>
   <body>
     <div class="app-shell">
@@ -176,8 +176,17 @@
           <div class="form-grid">
             <label class="field full-field"><span data-i18n="productNumber">货品编号 <i>*</i></span><input id="productNumber" name="number" required maxlength="40" placeholder="例如：SKU-2408-01" /></label>
             <label class="field"><span data-i18n="productType">货品类型 <i>*</i></span><input id="productType" name="type" required maxlength="30" placeholder="例如：护肤品" /></label>
+            <label class="field"><span data-i18n="productPrice">货品价格（选填）</span><input id="productPrice" name="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="例如：99.00" /></label>
             <label class="field"><span data-i18n="productFloor">所在楼层 <i>*</i></span><select id="productFloor" name="floor" required></select></label>
             <label class="field"><span data-i18n="productZone">所在区域 <i>*</i></span><select id="productZone" name="zone" required></select></label>
+            <fieldset class="field full-field status-field">
+              <legend data-i18n="stockStatus">货品数量状态</legend>
+              <div class="status-options">
+                <label class="status-option status-ample"><input type="radio" name="stockStatus" value="ample" checked /><span class="status-dot" aria-hidden="true"></span><span data-i18n="stockAmple">充裕</span></label>
+                <label class="status-option status-normal"><input type="radio" name="stockStatus" value="normal" /><span class="status-dot" aria-hidden="true"></span><span data-i18n="stockNormal">一般</span></label>
+                <label class="status-option status-restock"><input type="radio" name="stockStatus" value="restock" /><span class="status-dot" aria-hidden="true"></span><span data-i18n="stockRestock">需要补货</span></label>
+              </div>
+            </fieldset>
             <label class="field full-field"><span data-i18n="details">细节说明</span><textarea id="productDetails" name="details" rows="4" maxlength="240" placeholder="记录颜色、规格、陈列要求或补货备注…"></textarea><small><span id="detailCount">0</span>/240</small></label>
           </div>
         </div>
@@ -201,6 +210,6 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="supabase-browser.js?v=20261008"></script>
     <script src="supabase-config.js?v=20261008"></script>
-    <script src="app.js?v=rules-20261008-3"></script>
+    <script src="app.js?v=inventory-20261009"></script>
   </body>
 </html>
