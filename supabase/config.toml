@@ -1,3 +1,10 @@
+[auth]
+site_url = "https://bai-shu123.github.io/store-atlas/"
+additional_redirect_urls = [
+  "https://bai-shu123.github.io/store-atlas/",
+  "https://bai-shu123.github.io/store-atlas/**"
+]
+
 [functions.staff-api]
 verify_jwt = false
 
