@@ -9,7 +9,6 @@ const url = Deno.env.get('SUPABASE_URL')!;
 const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const service = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
-const publicAuth = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
 
 const normalize = (value: unknown) => String(value ?? '').trim().toLocaleLowerCase();
 const sha256 = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))).map((part) => part.toString(16).padStart(2, '0')).join('');
@@ -34,9 +33,11 @@ async function log(profile: any, action: string, entityId = '', summary = '', de
 }
 
 async function rememberDevice(profile: any, deviceToken: string, deviceLabel = '', browserLabel = '') {
-  if (!deviceToken) return;
+  if (!deviceToken) return false;
   const deviceHash = await sha256(deviceToken);
-  await service.from('trusted_devices').upsert({ user_id: profile.id, device_token_hash: deviceHash, device_label: deviceLabel, browser_label: browserLabel, last_seen_at: new Date().toISOString(), revoked_at: null }, { onConflict: 'user_id,device_token_hash' });
+  const { error } = await service.from('trusted_devices').upsert({ user_id: profile.id, device_token_hash: deviceHash, device_label: deviceLabel, browser_label: browserLabel, last_seen_at: new Date().toISOString(), revoked_at: null }, { onConflict: 'user_id,device_token_hash' });
+  if (error) console.warn('Unable to update device record', error.message);
+  return !error;
 }
 
 async function login(body: any) {
@@ -55,32 +56,10 @@ async function login(body: any) {
     return lockedUntil ? json({ error: 'locked', lockedUntil }, 423) : generic();
   }
   const authResult = await response.json();
-  const deviceHash = body.deviceToken ? await sha256(body.deviceToken) : '';
-  const { data: trusted } = deviceHash ? await service.from('trusted_devices').select('id').eq('user_id', profile.id).eq('device_token_hash', deviceHash).is('revoked_at', null).maybeSingle() : { data: null } as any;
-  if (profile.role === 'owner' && !trusted) {
-    const { error } = await publicAuth.auth.signInWithOtp({ email: userData.user.email, options: { shouldCreateUser: false } });
-    if (error) return json({ error: 'verification_unavailable' }, 503);
-    await log(profile, 'auth.device_challenge', profile.id, 'Verification code requested');
-    return json({ verificationRequired: true });
-  }
   await service.from('staff_profiles').update({ failed_attempts: 0, locked_until: null }).eq('id', profile.id);
   await rememberDevice(profile, body.deviceToken, body.deviceLabel, body.browserLabel);
   await log(profile, 'auth.login_success', profile.id, 'Signed in');
   return json({ ...authResult, profile });
-}
-
-async function verifyDevice(body: any) {
-  const profile = await profileByUsername(body.username);
-  if (!profile || profile.role !== 'owner') return json({ error: 'invalid_verification' }, 400);
-  const { data: userData } = await service.auth.admin.getUserById(profile.id);
-  const email = userData.user?.email;
-  if (!email) return json({ error: 'invalid_verification' }, 400);
-  const { data, error } = await publicAuth.auth.verifyOtp({ email, token: String(body.code || '').trim(), type: 'email' });
-  if (error || !data.session) { await log(profile, 'auth.device_verification_failed', profile.id); return json({ error: 'invalid_verification' }, 401); }
-  await rememberDevice(profile, body.deviceToken, body.deviceLabel, body.browserLabel);
-  await service.from('staff_profiles').update({ failed_attempts: 0, locked_until: null }).eq('id', profile.id);
-  await log(profile, 'auth.device_verified', profile.id, 'New device verified');
-  return json({ access_token: data.session.access_token, refresh_token: data.session.refresh_token, expires_in: data.session.expires_in, token_type: data.session.token_type, user: data.user, profile });
 }
 
 async function authenticatedAction(req: Request, action: string, body: any) {
@@ -95,10 +74,15 @@ async function authenticatedAction(req: Request, action: string, body: any) {
   }
   if (action === 'validate_session') {
     const deviceHash = body.deviceToken ? await sha256(String(body.deviceToken)) : '';
-    if (!deviceHash) return json({ error: 'session_revoked' }, 401);
-    const { data: device } = await service.from('trusted_devices').select('id').eq('user_id', actor.profile.id).eq('device_token_hash', deviceHash).is('revoked_at', null).maybeSingle();
-    if (!device) return json({ error: 'session_revoked' }, 401);
-    await service.from('trusted_devices').update({ last_seen_at: new Date().toISOString(), device_label: String(body.deviceLabel || ''), browser_label: String(body.browserLabel || '') }).eq('id', device.id);
+    if (deviceHash) {
+      const { data: device, error } = await service.from('trusted_devices').select('id,revoked_at').eq('user_id', actor.profile.id).eq('device_token_hash', deviceHash).maybeSingle();
+      if (!error && device?.revoked_at) return json({ error: 'session_revoked' }, 401);
+      if (!error && device) {
+        await service.from('trusted_devices').update({ last_seen_at: new Date().toISOString(), device_label: String(body.deviceLabel || ''), browser_label: String(body.browserLabel || '') }).eq('id', device.id);
+      } else if (!device) {
+        await rememberDevice(actor.profile, String(body.deviceToken), String(body.deviceLabel || ''), String(body.browserLabel || ''));
+      }
+    }
     return json({ profile: actor.profile });
   }
   if (action === 'list_devices') {
@@ -179,7 +163,6 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json(); const action = String(body.action || '');
     if (action === 'login') return await login(body);
-    if (action === 'verify_device') return await verifyDevice(body);
     return await authenticatedAction(req, action, body);
   } catch (error) { console.error(error); return json({ error: 'server_error' }, 500); }
 });

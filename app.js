@@ -167,7 +167,6 @@ const state = {
   online: navigator.onLine,
   session: null,
   profile: null,
-  verificationPending: false,
   realtimeChannel: null,
   highlightId: null,
   sessionCheckTimer: null,
@@ -407,11 +406,8 @@ function updateAccessUI() {
 }
 
 function resetLoginFlow() {
-  state.verificationPending = false;
   $("#loginForm")?.reset();
   $("#loginError").hidden = true;
-  $("#passwordLoginFields").hidden = false;
-  $("#verificationFields").hidden = true;
   $("#loginSubmit").textContent = "登录";
 }
 
@@ -419,7 +415,16 @@ async function validateCurrentSession({ notify = false } = {}) {
   if (!state.session || !remoteClient || state.sessionCheckRunning || !navigator.onLine) return Boolean(state.session);
   state.sessionCheckRunning = true;
   try {
-    const result = await callStaffApi("validate_session", { ...deviceInfo() });
+    let result;
+    try {
+      result = await callStaffApi("validate_session", { ...deviceInfo() });
+    } catch (error) {
+      if (!["unauthorized", "session_revoked"].includes(error.code) && error.status !== 401) throw error;
+      const { data, error: refreshError } = await remoteClient.auth.refreshSession();
+      if (refreshError || !data.session) throw error;
+      state.session = data.session;
+      result = await callStaffApi("validate_session", { ...deviceInfo() });
+    }
     state.profile = result.profile;
     updateAccessUI();
     if (state.profile?.must_change_password && !$("#passwordDialog").open) $("#passwordDialog").showModal();
@@ -465,18 +470,10 @@ async function handleLogin(event) {
   event.preventDefault();
   const errorBox = $('#loginError'); errorBox.hidden = true; $('#loginSubmit').disabled = true;
   try {
-    if (state.verificationPending) {
-      const result = await callStaffApi('verify_device', { username: $('#loginUsername').value, code: $('#loginCode').value, ...deviceInfo() }, false);
-      await acceptSession(result); state.verificationPending = false;
-    } else {
-      const result = await callStaffApi('login', { username: $('#loginUsername').value, password: $('#loginPassword').value, ...deviceInfo() }, false);
-      if (result.verificationRequired) {
-        state.verificationPending = true; $('#passwordLoginFields').hidden = true; $('#verificationFields').hidden = false; $('#loginSubmit').textContent = '验证并登录'; $('#loginCode').focus(); return;
-      }
-      await acceptSession(result);
-    }
+    const result = await callStaffApi('login', { username: $('#loginUsername').value, password: $('#loginPassword').value, ...deviceInfo() }, false);
+    await acceptSession(result);
   } catch (error) {
-    const messages = { invalid_credentials: '账号或密码不正确。', locked: `账号已暂时锁定，请在 ${new Date(error.result?.lockedUntil).toLocaleTimeString()} 后重试。`, invalid_verification: '验证码不正确或已经过期。', verification_unavailable: '暂时无法发送验证邮件，请稍后再试。' };
+    const messages = { invalid_credentials: '账号或密码不正确。', locked: `账号已暂时锁定，请在 ${new Date(error.result?.lockedUntil).toLocaleTimeString()} 后重试。` };
     errorBox.textContent = messages[error.code] || '登录失败，请检查网络后重试。'; errorBox.hidden = false;
   } finally { $('#loginSubmit').disabled = false; }
 }

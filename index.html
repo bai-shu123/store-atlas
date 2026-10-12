@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.webmanifest?v=secure-20261012" />
     <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml" />
     <title>店面货品摆放 · 区域台账</title>
-    <link rel="stylesheet" href="styles.css?v=secure-20261012" />
+    <link rel="stylesheet" href="styles.css?v=auth-20261012" />
   </head>
   <body>
     <div class="app-shell">
@@ -243,13 +243,9 @@
         <button type="button" id="closeLogin" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
         <p class="eyebrow">STAFF ACCESS</p><h2 id="loginTitle">员工登录</h2>
         <p class="auth-copy">登录后才能修改货品、处理补货和管理区域。</p>
-        <div id="passwordLoginFields" class="auth-fields">
+        <div class="auth-fields">
           <label class="field"><span>员工账号</span><input id="loginUsername" autocomplete="username" required /></label>
           <label class="field"><span>密码</span><input id="loginPassword" type="password" autocomplete="current-password" minlength="8" required /></label>
-        </div>
-        <div id="verificationFields" class="auth-fields" hidden>
-          <p class="verification-note">验证码已发送到主管理员绑定邮箱，请输入邮件中的一次性代码。</p>
-          <label class="field"><span>一次性验证码</span><input id="loginCode" inputmode="numeric" autocomplete="one-time-code" /></label>
         </div>
         <p id="loginError" class="form-error" role="alert" hidden></p>
         <button id="loginSubmit" type="submit" class="primary-button auth-submit">登录</button>
@@ -291,7 +287,7 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="supabase-browser.js?v=20261008"></script>
     <script src="supabase-config.js?v=20261008"></script>
-    <script src="app.js?v=secure-20261012"></script>
+    <script src="app.js?v=auth-20261012"></script>
     <script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));</script>
   </body>
 </html>
