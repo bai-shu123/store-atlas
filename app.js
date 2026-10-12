@@ -47,6 +47,8 @@ const LOCATION_RULES = {
 
 const STORAGE_KEY = 'store-atlas-products-v1';
 const LANGUAGE_KEY = 'store-atlas-language';
+const LAST_SYNC_KEY = 'store-atlas-last-sync';
+const DEVICE_TOKEN_KEY = 'store-atlas-device-token';
 const TRANSLATIONS = {
   zh: {
     title: '店面货品摆放 · 区域台账', brand: '店面货品摆放', navigate: 'NAVIGATE', areas: '摆放区域', storeMap: 'STORE MAP',
@@ -153,14 +155,6 @@ function applyLanguage() {
 }
 const STORE_ATLAS_CONFIG = window.STORE_ATLAS_CONFIG || {};
 let remoteClient = null;
-const seedProducts = [
-  { id: 'seed-1', number: 'SKU-2408-01', type: '季节主推', floor: '1F', zone: 'A', details: '入口第一视线，保持正面朝向；每周一检查库存。', image: '', updatedAt: '2026-10-06T09:20:00' },
-  { id: 'seed-2', number: 'SKU-2408-07', type: '护肤品', floor: '1F', zone: 'A', details: '白色礼盒装，和同系列试用装放在一起。', image: '', updatedAt: '2026-10-05T14:10:00' },
-  { id: 'seed-3', number: 'SKU-2410-12', type: '新品', floor: '1F', zone: 'B', details: '需要预留试用空间，附带说明卡。', image: '', updatedAt: '2026-10-04T11:45:00' },
-  { id: 'seed-4', number: 'SKU-2309-18', type: '日常补货', floor: '1F', zone: 'C', details: '按颜色从浅到深排列，断货时及时从后仓补齐。', image: '', updatedAt: '2026-10-03T16:35:00' },
-  { id: 'seed-5', number: 'SKU-2407-23', type: '套装', floor: '2F', zone: 'H1', details: '与 H2 的配件货品形成组合陈列。', image: '', updatedAt: '2026-10-02T10:05:00' },
-  { id: 'seed-6', number: 'SKU-2312-09', type: '经典款', floor: '3F', zone: 'X2', details: '按尺码从左至右排列，保留一件展示样品。', image: '', updatedAt: '2026-09-29T13:50:00' }
-];
 
 const state = {
   floor: '1F',
@@ -169,7 +163,15 @@ const state = {
   editingId: null,
   query: '',
   language: localStorage.getItem(LANGUAGE_KEY) || 'zh',
-  remoteEnabled: false
+  remoteEnabled: false,
+  online: navigator.onLine,
+  session: null,
+  profile: null,
+  verificationPending: false,
+  realtimeChannel: null,
+  highlightId: null,
+  sessionCheckTimer: null,
+  sessionCheckRunning: false
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -178,10 +180,10 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 function loadProducts() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    const products = Array.isArray(stored) ? stored : seedProducts;
+    const products = Array.isArray(stored) ? stored : [];
     return products.map((product) => ({ ...product, price: product.price === null || product.price === undefined ? '' : String(product.price), stockStatus: ['ample', 'normal', 'restock'].includes(product.stockStatus) ? product.stockStatus : 'ample' }));
   } catch (error) {
-    return seedProducts;
+    return [];
   }
 }
 
@@ -204,16 +206,29 @@ function remoteConfigured() {
 }
 
 function fromRemoteProduct(row) {
+  const suffix = state.language === 'ru' ? 'ru' : state.language === 'kk' ? 'kk' : 'zh';
   return {
     id: row.id,
     number: row.number,
-    type: row.type,
+    type: row[`type_${suffix}`] || row.type,
+    sourceType: row.type,
+    typeZh: row.type_zh || row.type || '', typeRu: row.type_ru || '', typeKk: row.type_kk || '',
     price: row.price === null || row.price === undefined || row.price === '' ? '' : String(row.price),
     stockStatus: ['ample', 'normal', 'restock'].includes(row.stock_status) ? row.stock_status : 'ample',
     floor: row.floor,
     zone: row.zone,
-    details: row.details || '',
+    details: row[`details_${suffix}`] || row.details || '',
+    sourceDetails: row.details || '',
+    detailsZh: row.details_zh || row.details || '', detailsRu: row.details_ru || '', detailsKk: row.details_kk || '',
     image: row.image || '',
+    imagePath: row.image_path || '',
+    translationStatus: row.translation_status || 'pending',
+    sourceLanguage: row.source_language || 'zh',
+    restockSince: row.restock_since || null,
+    moveNoticeUntil: row.move_notice_until || null,
+    moveNoticeFrom: row.move_notice_from || '',
+    deletedAt: row.deleted_at || null,
+    deleteReason: row.delete_reason || '',
     updatedAt: row.updated_at || new Date().toISOString()
   };
 }
@@ -222,15 +237,33 @@ function toRemoteProduct(product) {
   return {
     id: product.id,
     number: product.number,
-    type: product.type,
+    type: product.sourceType || product.type,
     price: product.price === '' || product.price === null || product.price === undefined ? null : Number(product.price),
     stock_status: product.stockStatus || 'ample',
     floor: product.floor,
     zone: product.zone,
-    details: product.details || '',
+    details: product.sourceDetails ?? product.details ?? '',
     image: product.image || '',
-    updated_at: product.updatedAt || new Date().toISOString()
+    image_path: product.imagePath || null,
+    source_language: product.sourceLanguage || state.language,
+    translation_status: product.translationStatus || 'pending',
+    type_zh: product.typeZh || null, type_ru: product.typeRu || null, type_kk: product.typeKk || null,
+    details_zh: product.detailsZh || null, details_ru: product.detailsRu || null, details_kk: product.detailsKk || null
   };
+}
+
+function canEdit() { return Boolean(state.profile && state.profile.is_active && !state.profile.must_change_password && state.online && state.remoteEnabled); }
+function isAdmin() { return ['owner', 'admin'].includes(state.profile?.role); }
+function isOwner() { return state.profile?.role === 'owner'; }
+function activeProducts() { return state.products.filter((product) => !product.deletedAt); }
+function deviceToken() {
+  let value = localStorage.getItem(DEVICE_TOKEN_KEY);
+  if (!value) { value = crypto.randomUUID(); localStorage.setItem(DEVICE_TOKEN_KEY, value); }
+  return value;
+}
+function deviceInfo() {
+  const mobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  return { deviceToken: deviceToken(), deviceLabel: mobile ? '手机或平板' : '电脑', browserLabel: /Edg/i.test(navigator.userAgent) ? 'Microsoft Edge' : /Chrome/i.test(navigator.userAgent) ? 'Chrome' : /Safari/i.test(navigator.userAgent) ? 'Safari' : '浏览器' };
 }
 
 async function refreshRemoteData({ notify = false } = {}) {
@@ -240,7 +273,7 @@ async function refreshRemoteData({ notify = false } = {}) {
     if (notify) showToast(t('refreshFailed'));
     return false;
   }
-  if (!remoteClient) remoteClient = window.supabase.createClient(STORE_ATLAS_CONFIG.url, STORE_ATLAS_CONFIG.anonKey);
+  if (!remoteClient) remoteClient = window.supabase.createClient(STORE_ATLAS_CONFIG.url, STORE_ATLAS_CONFIG.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   state.remoteEnabled = true;
   setSyncStatus(t('connecting'), 'busy');
   const { data, error } = await remoteClient.from('products').select('*').order('updated_at', { ascending: false });
@@ -250,19 +283,9 @@ async function refreshRemoteData({ notify = false } = {}) {
     if (notify) showToast(t('refreshFailed'));
     return false;
   }
-  if (data.length) {
-    state.products = data.map(fromRemoteProduct);
-  } else {
-    const { error: seedError } = await remoteClient.from('products').upsert(seedProducts.map(toRemoteProduct));
-    if (seedError) {
-      console.error('Supabase seed failed', seedError);
-      setSyncStatus(t('connectionFail'), 'error');
-      if (notify) showToast(t('refreshFailed'));
-      return false;
-    }
-    state.products = seedProducts;
-  }
+  state.products = (data || []).map(fromRemoteProduct);
   saveProducts();
+  localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
   setSyncStatus(t('cloudSynced'));
   renderAll();
   if (notify) showToast(t('refreshed'));
@@ -270,7 +293,16 @@ async function refreshRemoteData({ notify = false } = {}) {
 }
 
 async function initRemote() {
+  if (!remoteConfigured()) { updateAccessUI(); renderAll(); return; }
+  if (!remoteClient) remoteClient = window.supabase.createClient(STORE_ATLAS_CONFIG.url, STORE_ATLAS_CONFIG.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+  const { data } = await remoteClient.auth.getSession();
+  state.session = data.session;
+  if (state.session) await loadProfile();
+  remoteClient.auth.onAuthStateChange(async (_event, session) => { state.session = session; if (session) await loadProfile(); else state.profile = null; updateAccessUI(); renderAll(); });
   await refreshRemoteData();
+  subscribeRealtime();
+  updateAccessUI();
+  scheduleSessionValidation();
 }
 
 async function handleRefresh() {
@@ -290,7 +322,7 @@ async function handleRefresh() {
   }
 }
 
-async function uploadRemoteImage(product) {
+async function uploadRemoteImage(product, { removePrevious = true } = {}) {
   if (!remoteClient || !product.image || !product.image.startsWith('data:')) return product;
   const response = await fetch(product.image);
   const blob = await response.blob();
@@ -299,21 +331,167 @@ async function uploadRemoteImage(product) {
   const { error: uploadError } = await remoteClient.storage.from('product-images').upload(path, blob, { upsert: true, contentType: blob.type });
   if (uploadError) throw uploadError;
   const { data } = remoteClient.storage.from('product-images').getPublicUrl(path);
-  return { ...product, image: data.publicUrl };
+  if (removePrevious && product.imagePath && product.imagePath !== path) await remoteClient.storage.from('product-images').remove([product.imagePath]).catch(() => undefined);
+  return { ...product, image: data.publicUrl, imagePath: path };
 }
 
 async function upsertRemoteProduct(product) {
   if (!remoteClient) return product;
-  const remoteProduct = await uploadRemoteImage(product);
+  const previousPath = product.imagePath || '';
+  const remoteProduct = await uploadRemoteImage(product, { removePrevious: false });
   const { error } = await remoteClient.from('products').upsert(toRemoteProduct(remoteProduct));
   if (error) throw error;
-  return remoteProduct;
+  const sharedPreviousImage = state.products.some((item) => item.id !== product.id && item.imagePath === previousPath && !item.deletedAt);
+  if (previousPath && previousPath !== remoteProduct.imagePath && !sharedPreviousImage) await remoteClient.storage.from('product-images').remove([previousPath]).catch(() => undefined);
+  const { data, error: readError } = await remoteClient.from('products').select('*').eq('id', remoteProduct.id).single();
+  if (readError) throw readError;
+  return fromRemoteProduct(data);
+}
+
+async function requestTranslation(productId) {
+  try { await remoteClient.functions.invoke('translate-product', { body: { productId } }); }
+  catch (error) { console.warn('Translation queued but not completed', error); }
+}
+
+async function moveRemoteProduct(source, product) {
+  const uploaded = await uploadRemoteImage(product, { removePrevious: false });
+  const { data, error } = await remoteClient.rpc('move_product', {
+    p_source_id: source.id, p_new_id: product.id, p_floor: product.floor, p_zone: product.zone,
+    p_number: product.number, p_type: product.sourceType || product.type, p_details: product.sourceDetails ?? product.details ?? '',
+    p_price: product.price === '' ? null : Number(product.price), p_stock_status: 'ample', p_image: uploaded.image || '', p_image_path: uploaded.imagePath || null, p_source_language: product.sourceLanguage || state.language
+  });
+  if (error) throw error;
+  return fromRemoteProduct(data);
 }
 
 async function removeRemoteProduct(id) {
   if (!remoteClient) return;
-  const { error } = await remoteClient.from('products').delete().eq('id', id);
+  const { error } = await remoteClient.from('products').update({ deleted_at: new Date().toISOString(), deleted_by: state.profile?.id || null, delete_reason: 'manual' }).eq('id', id);
   if (error) throw error;
+}
+
+async function loadProfile() {
+  if (!remoteClient || !state.session?.user) { state.profile = null; return null; }
+  const { data, error } = await remoteClient.from('staff_profiles').select('*').eq('id', state.session.user.id).maybeSingle();
+  if (error || !data?.is_active || data.deleted_at) {
+    await remoteClient.auth.signOut(); state.profile = null; return null;
+  }
+  state.profile = data;
+  return data;
+}
+
+async function callStaffApi(action, payload = {}, authenticated = true) {
+  const headers = { 'Content-Type': 'application/json', apikey: STORE_ATLAS_CONFIG.anonKey };
+  if (authenticated && state.session?.access_token) headers.Authorization = `Bearer ${state.session.access_token}`;
+  const response = await fetch(`${STORE_ATLAS_CONFIG.url}/functions/v1/staff-api`, { method: 'POST', headers, body: JSON.stringify({ action, ...payload }) });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) { const error = new Error(result.error || 'request_failed'); error.code = result.error; error.status = response.status; error.result = result; throw error; }
+  return result;
+}
+
+function updateAccessUI() {
+  const staff = Boolean(state.profile);
+  document.body.classList.toggle('staff-mode', staff);
+  document.body.classList.toggle('admin-mode', isAdmin());
+  $$('[data-staff-only]').forEach((element) => { element.hidden = !staff; });
+  $$('[data-admin-only]').forEach((element) => { element.hidden = !isAdmin(); });
+  const label = $('#accountButtonLabel'); const avatar = $('.account-avatar');
+  if (label) label.textContent = staff ? state.profile.display_name : '员工登录';
+  if (avatar) avatar.textContent = staff ? (state.profile.display_name || state.profile.username).slice(0, 1) : '访';
+  const offline = !state.online || !state.remoteEnabled;
+  $('#offlineBanner').hidden = !offline;
+  if (offline) {
+    const last = localStorage.getItem(LAST_SYNC_KEY); const text = last ? new Date(last).toLocaleString() : '尚未成功同步';
+    $('#offlineMessage').textContent = `当前只可查看最近缓存，最后同步：${text}`;
+  }
+}
+
+function resetLoginFlow() {
+  state.verificationPending = false;
+  $("#loginForm")?.reset();
+  $("#loginError").hidden = true;
+  $("#passwordLoginFields").hidden = false;
+  $("#verificationFields").hidden = true;
+  $("#loginSubmit").textContent = "登录";
+}
+
+async function validateCurrentSession({ notify = false } = {}) {
+  if (!state.session || !remoteClient || state.sessionCheckRunning || !navigator.onLine) return Boolean(state.session);
+  state.sessionCheckRunning = true;
+  try {
+    const result = await callStaffApi("validate_session", { ...deviceInfo() });
+    state.profile = result.profile;
+    updateAccessUI();
+    if (state.profile?.must_change_password && !$("#passwordDialog").open) $("#passwordDialog").showModal();
+    return true;
+  } catch (error) {
+    if (["unauthorized", "session_revoked"].includes(error.code) || error.status === 401) {
+      await remoteClient.auth.signOut({ scope: "local" }).catch(() => undefined);
+      state.session = null;
+      state.profile = null;
+      updateAccessUI();
+      renderAll();
+      if (notify) showToast("登录状态已失效，已退回游客模式");
+      return false;
+    }
+    return true;
+  } finally {
+    state.sessionCheckRunning = false;
+  }
+}
+
+function scheduleSessionValidation() {
+  clearInterval(state.sessionCheckTimer);
+  state.sessionCheckTimer = setInterval(() => validateCurrentSession({ notify: true }), 60_000);
+}
+
+function subscribeRealtime() {
+  if (!remoteClient) return;
+  if (state.realtimeChannel) remoteClient.removeChannel(state.realtimeChannel);
+  state.realtimeChannel = remoteClient.channel('store-atlas-products').on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => refreshRemoteData()).subscribe();
+}
+
+async function acceptSession(result) {
+  if (!result.access_token || !result.refresh_token) throw new Error('session_missing');
+  const { data, error } = await remoteClient.auth.setSession({ access_token: result.access_token, refresh_token: result.refresh_token });
+  if (error) throw error;
+  state.session = data.session; state.profile = result.profile || await loadProfile();
+  updateAccessUI(); await refreshRemoteData();
+  $('#loginDialog').close();
+  if (state.profile?.must_change_password) $('#passwordDialog').showModal();
+}
+
+async function handleLogin(event) {
+  event.preventDefault();
+  const errorBox = $('#loginError'); errorBox.hidden = true; $('#loginSubmit').disabled = true;
+  try {
+    if (state.verificationPending) {
+      const result = await callStaffApi('verify_device', { username: $('#loginUsername').value, code: $('#loginCode').value, ...deviceInfo() }, false);
+      await acceptSession(result); state.verificationPending = false;
+    } else {
+      const result = await callStaffApi('login', { username: $('#loginUsername').value, password: $('#loginPassword').value, ...deviceInfo() }, false);
+      if (result.verificationRequired) {
+        state.verificationPending = true; $('#passwordLoginFields').hidden = true; $('#verificationFields').hidden = false; $('#loginSubmit').textContent = '验证并登录'; $('#loginCode').focus(); return;
+      }
+      await acceptSession(result);
+    }
+  } catch (error) {
+    const messages = { invalid_credentials: '账号或密码不正确。', locked: `账号已暂时锁定，请在 ${new Date(error.result?.lockedUntil).toLocaleTimeString()} 后重试。`, invalid_verification: '验证码不正确或已经过期。', verification_unavailable: '暂时无法发送验证邮件，请稍后再试。' };
+    errorBox.textContent = messages[error.code] || '登录失败，请检查网络后重试。'; errorBox.hidden = false;
+  } finally { $('#loginSubmit').disabled = false; }
+}
+
+async function changeOwnPassword(event) {
+  event.preventDefault(); const password = $('#newPassword').value; const confirm = $('#confirmPassword').value; const box = $('#passwordError'); box.hidden = true;
+  if (password.length < 8 || password !== confirm) { box.textContent = password.length < 8 ? '密码至少需要 8 个字符。' : '两次输入的密码不一致。'; box.hidden = false; return; }
+  try {
+    const { error } = await remoteClient.auth.updateUser({ password }); if (error) throw error;
+    await callStaffApi('password_changed'); state.profile.must_change_password = false; $('#passwordDialog').close(); showToast('密码已更新');
+  } catch (error) { box.textContent = '密码更新失败，请稍后重试。'; box.hidden = false; }
+}
+
+async function logout() {
+  await remoteClient?.auth.signOut(); state.session = null; state.profile = null; updateAccessUI(); $('#staffMenuDialog').close(); await refreshRemoteData(); showToast('已退回访客模式');
 }
 
 function escapeHTML(value = '') {
@@ -328,18 +506,19 @@ function formatDate(value) {
 }
 
 function floorProducts(floor = state.floor) {
-  return state.products.filter((product) => product.floor === floor);
+  return activeProducts().filter((product) => product.floor === floor);
 }
 
 function zoneProducts(floor = state.floor, zone = state.zone) {
-  return state.products.filter((product) => product.floor === floor && product.zone === zone);
+  return activeProducts().filter((product) => product.floor === floor && product.zone === zone);
 }
 
 function productCountForZone(floor, zone) {
-  return state.products.filter((product) => product.floor === floor && product.zone === zone).length;
+  return activeProducts().filter((product) => product.floor === floor && product.zone === zone).length;
 }
 
 function renderAll() {
+  updateAccessUI();
   applyLanguage();
   renderNavigation();
   renderMobileFloorBar();
@@ -348,6 +527,7 @@ function renderAll() {
   renderInspector();
   renderRestockCenter();
   renderSearchResults();
+  renderMergePanel();
 }
 
 function renderNavigation() {
@@ -407,7 +587,7 @@ function restockCard(product) {
 }
 
 function renderRestockCenter() {
-  const restockProducts = state.products.filter((product) => product.stockStatus === 'restock');
+  const restockProducts = activeProducts().filter((product) => product.stockStatus === 'restock').sort((a, b) => a.floor.localeCompare(b.floor) || a.zone.localeCompare(b.zone));
   const content = $('#restockContent');
   if (!content) return;
   content.innerHTML = restockProducts.length
@@ -423,14 +603,10 @@ function openRestockCenter() {
 }
 
 async function markProductRestocked(id) {
+  if (!canEdit()) { showToast('离线或未登录时不能修改'); return; }
   const product = state.products.find((item) => item.id === id);
   if (!product || product.stockStatus !== 'restock') return;
   const updatedProduct = { ...product, stockStatus: 'ample', updatedAt: new Date().toISOString() };
-  state.products = state.products.map((item) => item.id === id ? updatedProduct : item);
-  saveProducts();
-  renderAll();
-  showToast(state.remoteEnabled ? t('savedSyncing') : t('restocked'));
-  if (!state.remoteEnabled) return;
   try {
     setSyncStatus(t('syncing'), 'busy');
     const syncedProduct = await upsertRemoteProduct(updatedProduct);
@@ -451,8 +627,10 @@ function productCard(product) {
   const location = state.language === 'zh' ? `${product.floor} / ${product.zone}` : `${floorShortLabel(product.floor)} / ${product.zone}`;
   const stockStatus = product.stockStatus || 'ample';
   const stockLabel = t(stockStatus === 'restock' ? 'stockRestock' : stockStatus === 'normal' ? 'stockNormal' : 'stockAmple');
-  const price = product.price !== '' && product.price !== null && product.price !== undefined ? `<span class="product-price">${escapeHTML(t('pricePrefix'))} ${escapeHTML(product.price)}</span>` : '';
-  return `<article class="product-card"><div class="product-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="product-info"><span class="product-location">${escapeHTML(location)}</span><div class="product-heading-row"><h3 class="product-number" title="${escapeHTML(product.number)}">${escapeHTML(product.number)}</h3>${price}</div><p class="product-type">${escapeHTML(product.type)}</p><span class="stock-badge stock-${stockStatus}"><span class="stock-badge-dot" aria-hidden="true"></span>${escapeHTML(stockLabel)}</span><p class="product-details">${escapeHTML(product.details || t('noDetails'))}</p><div class="product-card-footer"><span class="product-date">${formatDate(product.updatedAt)}</span><div class="card-actions"><button class="card-action edit-product" data-id="${product.id}" aria-label="${escapeHTML(t('editProduct'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0 3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg></button><button class="card-action delete delete-product" data-id="${product.id}" aria-label="${escapeHTML(t('delete'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div></div></div></article>`;
+  const price = product.price !== '' && product.price !== null && product.price !== undefined ? `<span class="product-price">${escapeHTML(t('pricePrefix'))} ${Number(product.price).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₸</span>` : '';
+  const controls = state.profile ? `<div class="card-actions"><button class="card-action edit-product" data-id="${product.id}" aria-label="${escapeHTML(t('editProduct'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16-.7 4.7L8 20l11.3-11.3a2.1 2.1 0 0 0 3-3L5 17Z"></path><path d="m14.8 7.2 2 2"></path></svg></button><button class="card-action delete delete-product" data-id="${product.id}" aria-label="${escapeHTML(t('delete'))} ${escapeHTML(product.number)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button></div>` : '';
+  const notice = state.profile && product.moveNoticeUntil && new Date(product.moveNoticeUntil) > new Date() ? `<div class="move-notice">待移位：${escapeHTML(product.moveNoticeFrom || '请移到新位置')} · ${Math.ceil((new Date(product.moveNoticeUntil) - Date.now()) / 86400000)} 天</div>` : '';
+  return `<article id="product-${escapeHTML(product.id)}" class="product-card ${state.highlightId === product.id ? 'is-highlighted' : ''}"><div class="product-image ${product.image ? '' : 'placeholder'}">${image}</div><div class="product-info"><span class="product-location">${escapeHTML(location)}</span><div class="product-heading-row"><h3 class="product-number" title="${escapeHTML(product.number)}">${escapeHTML(product.number)}</h3>${price}</div><p class="product-type">${escapeHTML(product.type)}</p><span class="stock-badge stock-${stockStatus}"><span class="stock-badge-dot" aria-hidden="true"></span>${escapeHTML(stockLabel)}</span><p class="product-details">${escapeHTML(product.details || t('noDetails'))}</p>${notice}<div class="product-card-footer"><span class="product-date">${formatDate(product.updatedAt)}</span>${controls}</div></div></article>`;
 }
 
 function renderInspector() {
@@ -489,6 +667,7 @@ function selectZone(floor, zone) {
 }
 
 function openAdd() {
+  if (!canEdit()) { showToast('请先登录；离线时只能查看'); return; }
   state.editingId = null;
   $('#dialogEyebrow').textContent = t('addProduct');
   $('#dialogTitle').textContent = t('addProduct');
@@ -502,6 +681,7 @@ function openAdd() {
 }
 
 function openEdit(id) {
+  if (!canEdit()) { showToast('请先登录；离线时只能查看'); return; }
   const product = state.products.find((item) => item.id === id);
   if (!product) return;
   state.editingId = id;
@@ -537,36 +717,25 @@ function setImagePreview(src) {
 }
 
 async function deleteProduct(id) {
+  if (!canEdit()) { showToast('请先登录；离线时只能查看'); return; }
   const product = state.products.find((item) => item.id === id);
   if (!product) return;
   if (!window.confirm(t('confirmDelete', { number: product.number }))) return;
-  state.products = state.products.filter((item) => item.id !== id);
-  saveProducts();
-  renderAll();
-  showToast(state.remoteEnabled ? t('savedSyncing') : t('deleted'));
-  if (state.remoteEnabled) {
-    try {
-      await removeRemoteProduct(id);
-      setSyncStatus('云端已同步');
-      showToast(t('deleteShared'));
-    } catch (error) {
-      console.error('Supabase delete failed', error);
-      setSyncStatus(t('connectionFail'), 'error');
-      showToast(t('deleteFailed'));
-    }
-  }
+  try { await removeRemoteProduct(id); await refreshRemoteData(); showToast('货品已移入回收站'); }
+  catch (error) { console.error(error); showToast('删除失败，数据未改变'); }
 }
 
 function renderSearchResults() {
   const query = state.query.trim().toLowerCase();
   const panel = $('#searchResults');
   if (!query) { panel.hidden = true; return; }
-  const results = state.products.filter((product) => [product.number, product.type, product.price, product.stockStatus, product.details, product.zone, product.floor, floorLabel(product.floor), t(product.stockStatus === 'restock' ? 'stockRestock' : product.stockStatus === 'normal' ? 'stockNormal' : 'stockAmple')].join(' ').toLowerCase().includes(query)).slice(0, 8);
+  const statusRank = { ample: 0, normal: 1, restock: 2 };
+  const results = activeProducts().filter((product) => [product.number, product.type, product.price, product.stockStatus, product.details, product.zone, product.floor, floorLabel(product.floor), t(product.stockStatus === 'restock' ? 'stockRestock' : product.stockStatus === 'normal' ? 'stockNormal' : 'stockAmple')].join(' ').toLowerCase().includes(query)).sort((a,b) => statusRank[a.stockStatus] - statusRank[b.stockStatus] || a.floor.localeCompare(b.floor) || a.zone.localeCompare(b.zone)).slice(0, 20);
   panel.innerHTML = results.length ? results.map((product) => `<button class="search-result" data-search-id="${product.id}"><span class="search-result-thumb">${product.image ? `<img src="${product.image}" alt="" />` : escapeHTML(product.zone)}</span><span class="search-result-main"><strong>${escapeHTML(product.number)}</strong><span>${escapeHTML(product.type)} · ${escapeHTML(floorLabel(product.floor))} ${escapeHTML(product.zone)} ${state.language === 'ru' ? 'зона' : state.language === 'kk' ? 'аймағы' : '区'}</span></span></button>`).join('') : `<div class="search-empty">${escapeHTML(t('noResults'))}</div>`;
   panel.hidden = false;
   $$('.search-result').forEach((button) => button.addEventListener('click', () => {
     const product = state.products.find((item) => item.id === button.dataset.searchId);
-    if (product) selectZone(product.floor, product.zone);
+    if (product) { state.highlightId = product.id; selectZone(product.floor, product.zone); requestAnimationFrame(() => document.getElementById(`product-${product.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })); setTimeout(() => { state.highlightId = null; document.getElementById(`product-${product.id}`)?.classList.remove('is-highlighted'); }, 2800); }
   }));
 }
 
@@ -593,12 +762,102 @@ function exportData() {
   showToast(state.language === 'ru' ? 'Данные товаров экспортированы' : state.language === 'kk' ? 'Тауар деректері экспортталды' : '货品数据已导出');
 }
 
+function roleLabel(role) { return role === 'owner' ? '主管理员' : role === 'admin' ? '管理员' : '员工'; }
+function dateTime(value) { return value ? new Date(value).toLocaleString() : '—'; }
+
+async function openManagement(panel) {
+  if (!state.profile) return;
+  $('#staffMenuDialog').close();
+  const titles = { devices: ['DEVICES', '登录设备'], accounts: ['ACCOUNTS', '账号管理'], trash: ['RECYCLE BIN', '回收站'], audit: ['AUDIT LOG', '操作记录'] };
+  $('#managementEyebrow').textContent = titles[panel]?.[0] || 'MANAGEMENT';
+  $('#managementTitle').textContent = titles[panel]?.[1] || '管理';
+  $('#managementContent').innerHTML = '<div class="panel-loading">正在读取云端数据…</div>';
+  $('#managementDialog').showModal();
+  try {
+    if (panel === 'devices') await renderDevicesPanel();
+    if (panel === 'accounts') await renderAccountsPanel();
+    if (panel === 'trash') await renderTrashPanel();
+    if (panel === 'audit') await renderAuditPanel();
+  } catch (error) {
+    console.error(error); $('#managementContent').innerHTML = '<div class="panel-empty">读取失败，请检查网络和权限后重试。</div>';
+  }
+}
+
+async function renderDevicesPanel() {
+  const result = await callStaffApi('list_devices'); const devices = result.devices || [];
+  $('#managementContent').innerHTML = devices.length ? `<div class="management-list">${devices.map((device) => `<article class="management-row"><div><strong>${escapeHTML(device.device_label || '未命名设备')}</strong><span>${escapeHTML(device.browser_label || '')} · 最近使用 ${escapeHTML(dateTime(device.last_seen_at))}</span></div><button class="secondary-button revoke-device" data-id="${escapeHTML(device.id)}" ${device.revoked_at ? 'disabled' : ''}>${device.revoked_at ? '已撤销' : '撤销信任'}</button></article>`).join('')}</div>` : '<div class="panel-empty">暂无设备记录。</div>';
+  $$('.revoke-device').forEach((button) => button.addEventListener('click', async () => { button.disabled = true; try { await callStaffApi('revoke_device', { deviceId: button.dataset.id }); await renderDevicesPanel(); showToast('设备信任已撤销'); } catch { button.disabled = false; showToast('撤销失败'); } }));
+}
+
+async function renderAccountsPanel() {
+  if (!isAdmin()) throw new Error('forbidden');
+  const result = await callStaffApi('list_accounts'); const accounts = result.accounts || [];
+  $('#managementContent').innerHTML = `<form id="createAccountForm" class="management-form"><input id="newAccountUsername" required placeholder="登录账号" /><input id="newAccountName" required placeholder="员工姓名" /><input id="newAccountPassword" type="password" minlength="8" required placeholder="临时密码（至少 8 位）" /><select id="newAccountRole"><option value="staff">员工</option>${isOwner() ? '<option value="admin">管理员</option>' : ''}</select><button class="primary-button" type="submit">创建账号</button></form><div class="management-list">${accounts.map((account) => {
+    const manageable = account.role !== 'owner' && (isOwner() || account.role === 'staff');
+    return `<article class="management-row account-row"><div><strong>${escapeHTML(account.display_name)} <small>${escapeHTML(roleLabel(account.role))}</small></strong><span>${escapeHTML(account.username)} · ${account.is_active && !account.deleted_at ? '启用' : '停用'}${account.locked_until ? ` · 锁定至 ${escapeHTML(dateTime(account.locked_until))}` : ''}</span></div>${manageable ? `<div class="row-actions"><button class="secondary-button account-toggle" data-id="${account.id}" data-active="${account.is_active ? 'false' : 'true'}">${account.is_active ? '停用' : '启用'}</button>${account.locked_until ? `<button class="secondary-button account-unlock" data-id="${account.id}">解锁</button>` : ''}<button class="secondary-button account-reset" data-id="${account.id}">重置密码</button><button class="danger-button account-delete" data-id="${account.id}">删除</button></div>` : ''}</article>`;
+  }).join('')}</div>`;
+  $('#createAccountForm').addEventListener('submit', async (event) => { event.preventDefault(); try { await callStaffApi('create_account', { username: $('#newAccountUsername').value, displayName: $('#newAccountName').value, password: $('#newAccountPassword').value, role: $('#newAccountRole').value }); await renderAccountsPanel(); showToast('账号已创建'); } catch (error) { showToast(error.code === 'username_exists' ? '登录账号已经存在' : '账号创建失败'); } });
+  $$('.account-toggle').forEach((button) => button.addEventListener('click', () => accountAction('set_active', button.dataset.id, { active: button.dataset.active === 'true' })));
+  $$('.account-unlock').forEach((button) => button.addEventListener('click', () => accountAction('unlock', button.dataset.id)));
+  $$('.account-reset').forEach((button) => button.addEventListener('click', async () => { const password = window.prompt('输入新的临时密码（至少 8 位）'); if (password) await accountAction('reset_password', button.dataset.id, { password }); }));
+  $$('.account-delete').forEach((button) => button.addEventListener('click', async () => { if (confirm('删除后账号不能再次使用，确定继续吗？')) await accountAction('delete_account', button.dataset.id); }));
+}
+
+async function accountAction(action, userId, extra = {}) { try { await callStaffApi(action, { userId, ...extra }); await renderAccountsPanel(); showToast('账号状态已更新'); } catch { showToast('操作失败，请检查权限'); } }
+
+async function renderTrashPanel() {
+  if (!isAdmin()) throw new Error('forbidden');
+  const { data, error } = await remoteClient.from('products').select('*').not('deleted_at', 'is', null).order('deleted_at', { ascending: false }); if (error) throw error;
+  $('#managementContent').innerHTML = data.length ? `<div class="management-list">${data.map((row) => `<article class="management-row"><div><strong>${escapeHTML(row.number)} · ${escapeHTML(row.floor)} / ${escapeHTML(row.zone)}</strong><span>${escapeHTML(row.type || '')} · 删除于 ${escapeHTML(dateTime(row.deleted_at))}</span></div><button class="primary-button restore-product" data-id="${escapeHTML(row.id)}">恢复</button></article>`).join('')}</div>` : '<div class="panel-empty">回收站为空。</div>';
+  $$('.restore-product').forEach((button) => button.addEventListener('click', async () => { try { const { error: restoreError } = await remoteClient.rpc('restore_product', { p_product_id: button.dataset.id, p_floor: null, p_zone: null }); if (restoreError) throw restoreError; await renderTrashPanel(); await refreshRemoteData(); showToast('货品已恢复'); } catch (error) { showToast(error?.code === '23505' ? '原区域已有相同编号，请先处理位置冲突' : '恢复失败'); } }));
+}
+
+async function renderAuditPanel() {
+  if (!isAdmin()) throw new Error('forbidden');
+  const { data, error } = await remoteClient.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(200); if (error) throw error;
+  $('#managementContent').innerHTML = data.length ? `<div class="management-list audit-list">${data.map((entry) => `<article class="management-row"><div><strong>${escapeHTML(entry.actor_name || entry.actor_username || '系统')} · ${escapeHTML(entry.action)}</strong><span>${escapeHTML(entry.summary || '')} · ${escapeHTML(dateTime(entry.created_at))}</span></div></article>`).join('')}</div>` : '<div class="panel-empty">暂无操作记录。</div>';
+}
+
+function mergeGroups() {
+  const groups = new Map(); activeProducts().forEach((product) => { const key = product.number.trim().toLowerCase(); if (!groups.has(key)) groups.set(key, []); groups.get(key).push(product); });
+  return [...groups.values()].filter((products) => products.length > 1);
+}
+
+function renderMergePanel() {
+  const groups = mergeGroups(); $('#mergeTopCount').textContent = groups.length;
+  $('#mergeContent').innerHTML = groups.length ? groups.map((products, index) => `<form class="merge-group" data-group="${index}"><div class="merge-heading"><div><strong>${escapeHTML(products[0].number)}</strong><span>${products.length} 个位置可合并</span></div><select class="merge-status"><option value="ample">充裕</option><option value="normal">一般</option><option value="restock">需要补货</option></select></div><p>选择保留位置：</p><div class="merge-locations">${products.map((product, productIndex) => `<label><input type="radio" name="target-${index}" value="${product.id}" ${productIndex === 0 ? 'checked' : ''} /><span><b>${escapeHTML(product.floor)} / ${escapeHTML(product.zone)}</b>${escapeHTML(product.type)}${product.price ? ` · ₸${escapeHTML(product.price)}` : ''}</span></label>`).join('')}</div><p>选择要合并并移入回收站的位置：</p><div class="merge-sources">${products.map((product, productIndex) => `<label><input type="checkbox" value="${product.id}" ${productIndex === 0 ? '' : 'checked'} /><span>${escapeHTML(product.floor)} / ${escapeHTML(product.zone)}</span></label>`).join('')}</div><button class="primary-button" type="submit">确认合并</button></form>`).join('') : '<div class="panel-empty">当前没有可合并的同编号位置。</div>';
+  $$('.merge-group').forEach((form) => {
+    const syncSources = () => { const target = form.querySelector('input[type="radio"]:checked')?.value; form.querySelectorAll('.merge-sources input').forEach((box) => { box.disabled = box.value === target; if (box.disabled) box.checked = false; }); };
+    form.querySelectorAll('input[type="radio"]').forEach((radio) => radio.addEventListener('change', syncSources)); syncSources();
+    form.addEventListener('submit', async (event) => { event.preventDefault(); const targetId = form.querySelector('input[type="radio"]:checked')?.value; const sourceIds = [...form.querySelectorAll('.merge-sources input:checked')].map((box) => box.value); if (!sourceIds.length) { showToast('至少选择一个来源位置'); return; } if (!confirm('来源位置将进入回收站，确定合并吗？')) return; try { const { error } = await remoteClient.rpc('merge_product_locations', { p_target_id: targetId, p_source_ids: sourceIds, p_final_status: form.querySelector('.merge-status').value }); if (error) throw error; await refreshRemoteData(); renderMergePanel(); showToast('位置已合并'); } catch { showToast('合并失败，数据没有改变'); } });
+  });
+}
+
 $('#quickAdd').addEventListener('click', openAdd);
 $('#areaAdd').addEventListener('click', openAdd);
 $('#emptyAdd').addEventListener('click', openAdd);
 $('#exportData').addEventListener('click', exportData);
 $('#refreshData').addEventListener('click', handleRefresh);
 $('#restockTop')?.addEventListener('click', openRestockCenter);
+$('#accountButton')?.addEventListener('click', () => state.profile ? ($('#staffIdentity').textContent = `${state.profile.display_name || state.profile.username} · ${roleLabel(state.profile.role)}`, $('#staffMenuDialog').showModal()) : (resetLoginFlow(), $('#loginDialog').showModal()));
+$('#closeLogin')?.addEventListener('click', () => { $('#loginDialog').close(); resetLoginFlow(); });
+$('#loginDialog')?.addEventListener('click', (event) => { if (event.target === $('#loginDialog')) { $('#loginDialog').close(); resetLoginFlow(); } });
+$('#loginForm')?.addEventListener('submit', handleLogin);
+$('#passwordForm')?.addEventListener('submit', changeOwnPassword);
+$('#changePassword')?.addEventListener('click', () => { $('#staffMenuDialog').close(); $('#newPassword').value = ''; $('#confirmPassword').value = ''; $('#passwordDialog').showModal(); });
+$('#logoutButton')?.addEventListener('click', logout);
+$('#closeStaffMenu')?.addEventListener('click', () => $('#staffMenuDialog').close());
+$('#staffMenuDialog')?.addEventListener('click', (event) => { if (event.target === $('#staffMenuDialog')) $('#staffMenuDialog').close(); });
+$$('[data-open-panel]').forEach((button) => button.addEventListener('click', () => openManagement(button.dataset.openPanel)));
+$('#closeManagement')?.addEventListener('click', () => $('#managementDialog').close());
+$('#managementDialog')?.addEventListener('click', (event) => { if (event.target === $('#managementDialog')) $('#managementDialog').close(); });
+$('#mergeTop')?.addEventListener('click', () => { renderMergePanel(); $('#mergeDialog').showModal(); });
+$('#closeMerge')?.addEventListener('click', () => $('#mergeDialog').close());
+$('#mergeDialog')?.addEventListener('click', (event) => { if (event.target === $('#mergeDialog')) $('#mergeDialog').close(); });
+window.addEventListener('online', async () => { state.online = true; updateAccessUI(); await validateCurrentSession({ notify: true }); await refreshRemoteData(); showToast('网络已恢复，数据已同步'); });
+window.addEventListener('offline', () => { state.online = false; updateAccessUI(); renderAll(); showToast('当前离线，只能查看最近缓存'); });
+window.addEventListener('focus', () => validateCurrentSession({ notify: true }));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') validateCurrentSession({ notify: true }); });
 function openLocationRules() { renderLocationRules(); $('#locationRulesDialog').showModal(); }
 $('#locationRulesDesktop').addEventListener('click', openLocationRules);
 $('#closeLocationRules').addEventListener('click', () => $('#locationRulesDialog').close());
@@ -614,50 +873,55 @@ $('#clearSearch').addEventListener('click', () => { state.query = ''; $('#global
 $('#productImage').addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (!file) return;
-  if (file.size > 4 * 1024 * 1024) { showToast(t('imageTooLarge')); event.target.value = ''; return; }
   const reader = new FileReader();
-  reader.onload = () => setImagePreview(reader.result);
+  reader.onload = () => {
+    const image = new Image();
+    image.onload = () => {
+      const maxSide = 1600; const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+      const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale));
+      canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+      setImagePreview(canvas.toDataURL('image/webp', .82));
+    };
+    image.onerror = () => { showToast('图片无法读取，请换一张图片'); event.target.value = ''; };
+    image.src = reader.result;
+  };
   reader.readAsDataURL(file);
 });
 $('#removeImage').addEventListener('click', () => { setImagePreview(''); $('#productImage').value = ''; });
 $('#languageSelect').addEventListener('change', (event) => {
   state.language = event.target.value;
   localStorage.setItem(LANGUAGE_KEY, state.language);
+  const suffix = state.language === 'ru' ? 'Ru' : state.language === 'kk' ? 'Kk' : 'Zh';
+  state.products = state.products.map((product) => ({ ...product, type: product[`type${suffix}`] || product.sourceType || product.type, details: product[`details${suffix}`] || product.sourceDetails || product.details }));
   renderAll();
 });
 $('#productForm').addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (!canEdit()) { showToast('请先登录；离线时不能保存'); return; }
   const product = { number: $('#productNumber').value.trim(), type: $('#productType').value.trim(), price: $('#productPrice').value.trim(), stockStatus: document.querySelector('input[name="stockStatus"]:checked')?.value || 'ample', floor: $('#productFloor').value, zone: $('#productZone').value, details: $('#productDetails').value.trim(), image: $('#productImage').dataset.value || '', updatedAt: new Date().toISOString() };
   if (!product.number || !product.type) return;
-  const savedProduct = state.editingId
-    ? { ...state.products.find((item) => item.id === state.editingId), ...product }
-    : { ...product, id: `product-${Date.now()}` };
-  if (state.editingId) {
-    state.products = state.products.map((item) => item.id === state.editingId ? savedProduct : item);
-  } else {
-    state.products.unshift(savedProduct);
-  }
-  saveProducts();
-  state.floor = product.floor;
-  state.zone = product.zone;
-  $('#productDialog').close();
-  renderAll();
-  showToast(state.remoteEnabled ? t('savedSyncing') : (state.editingId ? t('updatedProduct') : t('added')));
-  if (state.remoteEnabled) {
-    try {
-      setSyncStatus(t('syncing'), 'busy');
-      const syncedProduct = await upsertRemoteProduct(savedProduct);
-      state.products = state.products.map((item) => item.id === syncedProduct.id ? syncedProduct : item);
-      saveProducts();
-      setSyncStatus(t('cloudSynced'));
-      renderAll();
-      showToast(state.editingId ? t('syncedUpdated') : t('syncedAdded'));
-    } catch (error) {
-      console.error('Supabase save failed', error);
-      setSyncStatus(t('connectionFail'), 'error');
-      showToast(t('syncFailed'));
-    }
-  }
+  const duplicate = activeProducts().find((item) => item.id !== state.editingId && item.floor === product.floor && item.zone === product.zone && item.number.trim().toLowerCase() === product.number.toLowerCase());
+  if (duplicate) { showToast(`区域 ${product.zone} 已有编号 ${product.number}`); return; }
+  const original = state.editingId ? state.products.find((item) => item.id === state.editingId) : null;
+  const moved = Boolean(original && (original.floor !== product.floor || original.zone !== product.zone));
+  const savedProduct = original
+    ? { ...original, ...product, sourceType: product.type, sourceDetails: product.details, sourceLanguage: state.language, translationStatus: 'pending' }
+    : { ...product, sourceType: product.type, sourceDetails: product.details, sourceLanguage: state.language, translationStatus: 'pending', id: crypto.randomUUID() };
+  if (moved) savedProduct.id = crypto.randomUUID();
+  const submit = $('#saveProduct'); submit.disabled = true;
+  try {
+    setSyncStatus(t('syncing'), 'busy');
+    const syncedProduct = moved ? await moveRemoteProduct(original, savedProduct) : await upsertRemoteProduct(savedProduct);
+    requestTranslation(syncedProduct.id);
+    state.floor = syncedProduct.floor; state.zone = syncedProduct.zone;
+    $('#productDialog').close();
+    await refreshRemoteData();
+    showToast(moved ? '新位置已建立，旧位置保留 3 天移位提示' : (original ? t('syncedUpdated') : t('syncedAdded')));
+  } catch (error) {
+    console.error('Supabase save failed', error);
+    setSyncStatus(t('connectionFail'), 'error');
+    showToast(error?.code === '23505' ? `区域 ${product.zone} 已有相同编号` : '保存失败，云端数据没有改变');
+  } finally { submit.disabled = false; }
 });
 
 renderAll();

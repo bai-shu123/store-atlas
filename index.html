@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#112231" />
+    <meta name="description" content="店面货品导航：按楼层和区域查找共享货品信息。" />
+    <link rel="manifest" href="manifest.webmanifest?v=secure-20261012" />
+    <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml" />
     <title>店面货品摆放 · 区域台账</title>
-    <link rel="stylesheet" href="styles.css?v=inventory-20261009-restock-position" />
+    <link rel="stylesheet" href="styles.css?v=secure-20261012" />
   </head>
   <body>
     <div class="app-shell">
@@ -40,16 +43,25 @@
           <button id="refreshData" class="icon-button refresh-button" type="button" aria-label="刷新云端数据" title="刷新云端数据">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.8-4L4 9"></path><path d="M4 5v4h4"></path><path d="M4 13a8 8 0 0 0 14.8 4L20 15"></path><path d="M20 19v-4h-4"></path></svg>
           </button>
-          <button id="restockTop" class="restock-top-button" type="button" aria-label="打开补货中心" title="打开补货中心">
+          <button id="mergeTop" class="tool-top-button" type="button" data-staff-only hidden aria-label="打开位置合并" title="打开位置合并">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h8a4 4 0 0 1 4 4v6"></path><path d="m14 14 3 3 3-3M5 17h5M5 12h5"></path></svg>
+            <span>位置合并</span><b id="mergeTopCount">0</b>
+          </button>
+          <button id="restockTop" class="restock-top-button" type="button" data-staff-only hidden aria-label="打开补货中心" title="打开补货中心">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg>
             <span data-i18n="restockCenter">补货中心</span><b id="restockTopCount">0</b>
           </button>
-          <button id="quickAdd" class="primary-button top-add">
+          <button id="quickAdd" class="primary-button top-add" data-staff-only hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
             <span>新增货品</span>
           </button>
+          <button id="accountButton" class="account-button" type="button">
+            <span class="account-avatar" aria-hidden="true">访</span><span id="accountButtonLabel">员工登录</span>
+          </button>
         </div>
       </header>
+
+      <div id="offlineBanner" class="offline-banner" hidden><strong>离线查看</strong><span id="offlineMessage">当前显示最近同步的数据，恢复网络后将自动更新。</span></div>
 
       <div class="mobile-floor-bar" id="mobileFloorBar" aria-label="楼层导航"></div>
 
@@ -108,11 +120,11 @@
                 <p id="currentAreaMeta" class="section-subtitle">一楼 · 入口陈列区</p>
               </div>
               <div class="section-actions">
-                <button id="exportData" class="secondary-button" title="导出全部数据">
+                <button id="exportData" class="secondary-button" data-admin-only hidden title="导出全部数据">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
                   <span data-i18n="export">导出</span>
                 </button>
-                <button id="areaAdd" class="primary-button">
+                <button id="areaAdd" class="primary-button" data-staff-only hidden>
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
                   <span data-i18n="addToZone">添加到本区</span>
                 </button>
@@ -125,7 +137,7 @@
               <div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"></path><path d="m4 7.5 8 4 8-4M12 11.5V20"></path></svg></div>
               <h3 data-i18n="emptyTitle">这个区域还没有货品</h3>
               <p data-i18n="emptyCopy">把第一件货品放进这里，建立你的店面地图。</p>
-              <button id="emptyAdd" class="primary-button" data-i18n="emptyAdd">添加第一件货品</button>
+              <button id="emptyAdd" class="primary-button" data-staff-only hidden data-i18n="emptyAdd">添加第一件货品</button>
             </div>
           </section>
         </main>
@@ -194,7 +206,7 @@
             <label class="field full-field"><span data-i18n="details">细节说明</span><textarea id="productDetails" name="details" rows="4" maxlength="240" placeholder="记录颜色、规格、陈列要求或补货备注…"></textarea><small><span id="detailCount">0</span>/240</small></label>
           </div>
         </div>
-        <div class="dialog-footer"><button type="button" id="cancelDialog" class="secondary-button" data-i18n="cancel">取消</button><button type="submit" class="primary-button"><span id="saveProductText">保存货品</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></div>
+        <div class="dialog-footer"><button type="button" id="cancelDialog" class="secondary-button" data-i18n="cancel">取消</button><button type="submit" id="saveProduct" class="primary-button"><span id="saveProductText">保存货品</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></button></div>
       </form>
     </dialog>
 
@@ -225,9 +237,61 @@
       </div>
     </dialog>
 
+    <dialog id="loginDialog" class="auth-dialog" aria-labelledby="loginTitle">
+      <form id="loginForm" class="auth-card">
+        <div class="auth-brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><span>STORE ATLAS</span></div>
+        <button type="button" id="closeLogin" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+        <p class="eyebrow">STAFF ACCESS</p><h2 id="loginTitle">员工登录</h2>
+        <p class="auth-copy">登录后才能修改货品、处理补货和管理区域。</p>
+        <div id="passwordLoginFields" class="auth-fields">
+          <label class="field"><span>员工账号</span><input id="loginUsername" autocomplete="username" required /></label>
+          <label class="field"><span>密码</span><input id="loginPassword" type="password" autocomplete="current-password" minlength="8" required /></label>
+        </div>
+        <div id="verificationFields" class="auth-fields" hidden>
+          <p class="verification-note">验证码已发送到主管理员绑定邮箱，请输入邮件中的一次性代码。</p>
+          <label class="field"><span>一次性验证码</span><input id="loginCode" inputmode="numeric" autocomplete="one-time-code" /></label>
+        </div>
+        <p id="loginError" class="form-error" role="alert" hidden></p>
+        <button id="loginSubmit" type="submit" class="primary-button auth-submit">登录</button>
+      </form>
+    </dialog>
+
+    <dialog id="passwordDialog" class="auth-dialog" aria-labelledby="passwordTitle">
+      <form id="passwordForm" class="auth-card">
+        <p class="eyebrow">SECURITY</p><h2 id="passwordTitle">设置新密码</h2>
+        <p class="auth-copy">临时密码只能用于首次登录。新密码至少 8 个字符。</p>
+        <label class="field"><span>新密码</span><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required /></label>
+        <label class="field"><span>再次输入</span><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required /></label>
+        <p id="passwordError" class="form-error" role="alert" hidden></p>
+        <button type="submit" class="primary-button auth-submit">保存新密码</button>
+      </form>
+    </dialog>
+
+    <dialog id="staffMenuDialog" class="staff-menu-dialog" aria-labelledby="staffMenuTitle">
+      <div class="staff-menu-card">
+        <div class="dialog-header"><div><p class="eyebrow">WORKSPACE</p><h2 id="staffMenuTitle">员工工作台</h2><p id="staffIdentity" class="staff-identity"></p></div><button type="button" id="closeStaffMenu" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div>
+        <div class="staff-menu-grid">
+          <button type="button" data-open-panel="devices"><strong>登录设备</strong><span>查看并退出自己的设备</span></button>
+          <button type="button" data-open-panel="accounts" data-admin-only hidden><strong>账号管理</strong><span>创建、停用和重置员工账号</span></button>
+          <button type="button" data-open-panel="trash" data-admin-only hidden><strong>回收站</strong><span>恢复 30 天内删除的货品</span></button>
+          <button type="button" data-open-panel="audit" data-admin-only hidden><strong>操作记录</strong><span>查看一年内的管理记录</span></button>
+        </div>
+        <div class="staff-menu-footer"><button id="changePassword" type="button" class="secondary-button">修改密码</button><button id="logoutButton" type="button" class="danger-button">退出登录</button></div>
+      </div>
+    </dialog>
+
+    <dialog id="managementDialog" class="management-dialog" aria-labelledby="managementTitle">
+      <div class="management-card"><div class="dialog-header"><div><p class="eyebrow" id="managementEyebrow">MANAGEMENT</p><h2 id="managementTitle">管理</h2></div><button type="button" id="closeManagement" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><div id="managementContent" class="management-content"></div></div>
+    </dialog>
+
+    <dialog id="mergeDialog" class="management-dialog" aria-labelledby="mergeTitle">
+      <div class="management-card"><div class="dialog-header"><div><p class="eyebrow">MERGE LOCATIONS</p><h2 id="mergeTitle">位置合并</h2><p class="restock-intro">选择同编号货品的保留位置，并把其他来源移入回收站。</p></div><button type="button" id="closeMerge" class="icon-button dialog-close" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><div id="mergeContent" class="management-content"></div></div>
+    </dialog>
+
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="supabase-browser.js?v=20261008"></script>
     <script src="supabase-config.js?v=20261008"></script>
-    <script src="app.js?v=inventory-20261009-restock-position"></script>
+    <script src="app.js?v=secure-20261012"></script>
+    <script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));</script>
   </body>
 </html>
